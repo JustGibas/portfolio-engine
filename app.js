@@ -7,7 +7,7 @@
  * and initializes modules to populate the DOM.
  * 
  * The application follows an ECS architecture where:
- * - Entities represent distinct sections of the portfolio (header, about, skills, etc.)
+ * - Entities represent distinct sections of the portfolio (header, about, projects, etc.)
  * - Components store data (dom references, theme settings, route information, etc.)
  * - Systems provide behavior and logic (theme management, routing, rendering, etc.)
  * 
@@ -18,12 +18,12 @@
  * @requires RoutingSystem from ./systems/RoutingSystem.js
  * @requires NavSystem from ./systems/NavSystem.js
  * @requires headerBase from ./modules/header/header-base.js
- * @requires navigation from ./modules/navigation.js
- * @requires projects from ./modules/projects.js
- * @requires about from ./modules/about.js
- * @requires contact from ./modules/contact.js
+ * @requires navigation from ./modules/header/navigation.js
+ * @requires projects from ./pages/projects.js
+ * @requires about from ./pages/about.js
+ * @requires contact from ./pages/contact.js
  * @requires footer from ./modules/footer.js
- * @requires themeSelector from ./modules/theme-selector.js
+ * @requires themeSelector from ./modules/header/theme-selector.js
  * @requires config from ./config.js
  * 
  * @design The application uses the Entity Component System (ECS) architectural pattern
@@ -37,12 +37,11 @@ import { RenderSystem } from './systems/RenderSystem.js';
 import { RoutingSystem } from './systems/RoutingSystem.js';
 import { NavSystem } from './systems/NavSystem.js';
 import { headerBase } from './modules/header/header-base.js';
-import { navigation } from './modules/navigation.js';
-import { projects } from './modules/projects.js';
-import { about } from './modules/about.js';
-import { contact } from './modules/contact.js';
+import { navigation } from './modules/header/navigation.js';
+import { projects } from './pages/projects.js';
+import { about } from './pages/about.js';
+import { contact } from './pages/contact.js';
 import { footer } from './modules/footer.js';
-import { themeSelector } from './modules/theme-selector.js';
 import config from './config.js';
 
 /**
@@ -73,7 +72,7 @@ ecs.registerSystem(new NavSystem());
  * Create and configure the Header entity.
  * 
  * The Header entity represents the top section of the portfolio that typically
- * contains the site title and introductory content.
+ * contains the site title and introductory content and theme selection.
  * 
  * Components:
  * - dom: References the header HTML element
@@ -149,21 +148,6 @@ contactEntity.addComponent('dom', { container: document.getElementById('contact'
 contactEntity.addComponent('route', { path: 'contact', active: false });
 contactEntity.addComponent('renderable', { visible: true });
 contact.init(contactEntity);
-
-/**
- * Create and configure the Theme Selector entity.
- * 
- * The Theme Selector entity provides the UI for users to switch between
- * different visual themes for the portfolio.
- * 
- * Components:
- * - dom: References the theme selector HTML element
- * - theme: Stores theme-related state for this entity
- */
-const themeSelectorEntity = ecs.createEntity();
-themeSelectorEntity.addComponent('dom', { container: document.getElementById('theme-selector') });
-themeSelectorEntity.addComponent('theme', { currentTheme: config.theme.default });
-themeSelector.init(themeSelectorEntity);
 
 /**
  * Create and configure the Footer entity.
