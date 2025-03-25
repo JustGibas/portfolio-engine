@@ -1,127 +1,329 @@
-# PORTFOLIO ENGINE – DEV GUIDE
+# PORTFOLIO ENGINE – COMPREHENSIVE DOCUMENTATION
 
-## Overview
+## Table of Contents
+1. [Architecture Overview](#architecture-overview)
+2. [Core Concepts](#core-concepts)
+3. [Component Design](#component-design)
+4. [Module System](#module-system)
+5. [Routing & Navigation](#routing--navigation)
+6. [Theming System](#theming-system)
+7. [Project Showcases](#project-showcases)
+8. [Development Roadmap](#development-roadmap)
+9. [File Documentation Standards](#file-documentation-standards)
+10. [Contributing Guidelines](#contributing-guidelines)
 
-This project is not a traditional portfolio — it's a modular, game-inspired system that showcases the evolution of a creative technologist through dynamic scenes, real-time components, and intelligent, extendable logic.
+## Architecture Overview
 
-The system is structured like a minimal game engine, using Entity-Component-System (ECS) architecture to support runtime modularity, extensibility, and visual/functional transitions — just like a game UI, but made for showcasing identity.
+The Portfolio Engine is built on Entity-Component-System (ECS) architecture, inspired by game development patterns. This architecture was chosen for several key benefits:
 
-## Core Principles
+- **Separation of Data and Logic**: Components store data while systems implement behavior
+- **Composability**: Entities can mix and match components for flexible feature sets
+- **Runtime Flexibility**: Systems can be hot-swapped and components can be added/removed dynamically
+- **Predictable Data Flow**: Clear paths for data transformation and state management
+- **Scalability**: Easy to extend without complex inheritance hierarchies
 
-- **Modularity**: Everything is a module — headers, project cards, scenes, logic systems.
-- **Composability**: Modules can be extended or overridden. No code repetition.
-- **Runtime Flexibility**: Swap and reload modules at runtime via panel or config.
-- **ECS Architecture**: Behavior is separated from data. Systems run on component data.
-- **Game-Like Experience**: Treat each page like a scene, each element like a game object.
+This architecture creates a portfolio that feels alive and interactive - more like a game environment than a static website. Each section of the portfolio is an entity with components that define its behavior, appearance, and state.
 
-## Key Concepts
+## Core Concepts
 
 ### Entity
 
-A unique element in the system (e.g., a Header, ProjectCard, ThemePanel, Scene). Each entity can hold multiple components.
+An entity represents a distinct element in our portfolio, such as a header, project card, or entire section. Entities are essentially containers for components - they have no behavior of their own.
+
+**Example Entities:**
+- Header entity
+- Navigation entity
+- Project showcase entity
+- Theme selector entity
 
 ### Component
 
-A piece of data attached to an entity (e.g., theme, visibility, dom, config, animationState).
+Components are pure data containers attached to entities. They define what an entity "has" or "is", but not what it "does".
+
+**Key Components:**
+- `dom` - References to DOM elements
+- `theme` - Theme-related data
+- `route` - Routing information
+- `renderable` - Visibility and rendering properties
+- `project` - Project-specific data
 
 ### System
 
-A logic unit that operates on all entities with certain components (e.g., ThemeSystem, RenderSystem, SceneRouter).
+Systems contain all the logic that operates on entities with specific component combinations. They implement behaviors that transform component data.
 
-## Directory Structure
+**Core Systems:**
+- `ThemeSystem` - Manages theme switching and application
+- `RenderSystem` - Handles DOM rendering and updates
+- `RoutingSystem` - Manages route changes and section visibility
+- `NavSystem` - Handles navigation interactions
 
-```
-portfolio/
-├── index.html
-├── app.js                 # Entry: bootstraps ECS & modules
-├── config.js              # Runtime config / switches
-│
-├── engine/                # ECS core (extendable)
-│   ├── ecs.js             # ECS lifecycle
-│   ├── entity.js
-│   ├── system.js
-│
-├── modules/               # App-level features
-│   ├── header/
-│   │   ├── header-base.js
-│   │   └── header-extended.js
-│   ├── footer.js
-│   ├── projects.js
-│   ├── about.js
-│   └── contact.js
-│
-├── systems/               # Logic engines
-│   ├── ThemeSystem.js
-│   ├── RenderSystem.js
-│   └── RoutingSystem.js
-│
-├── assets/
-│   ├── images/
-│   ├── shaders/
-│   └── gifs/
-│
-├── styles/
-│   ├── base.css
-│   └── themes.css
-│
-└── README.md
+## Component Design
+
+Each component is designed to be:
+
+1. **Pure Data**: No methods or behavior in components
+2. **Serializable**: Can be saved/loaded from storage
+3. **Composable**: Works well with other components
+4. **Minimal**: Focused on a single aspect of functionality
+
+Components are registered with entities through the `addComponent` method:
+
+```javascript
+entity.addComponent('dom', { container: document.getElementById('header') });
+entity.addComponent('theme', { currentTheme: 'dark' });
 ```
 
-## Development Notes
+Components should be designed to support future extensions without breaking existing functionality.
 
-1. **Start Simple**
+## Module System
 
-   - Load a base layout with one header and one project
-   - Add ECS core + 1 system (ThemeSystem)
-   - Inject DOM dynamically through dom component
+Modules are reusable, encapsulated units of functionality that can be loaded dynamically. Each module exports an object with an `init` method that receives an entity.
 
-2. **Add Scene Logic**
+**Module structure:**
+```javascript
+const moduleExample = {
+  init(entity) {
+    // Access component data
+    const container = entity.getComponent('dom').container;
+    
+    // Implement module-specific logic
+    container.innerHTML = `<div>Module content</div>`;
+    
+    // Set up event listeners if needed
+    container.addEventListener('click', () => {
+      // Handle interactions
+    });
+  }
+};
 
-   - Treat routes like scenes: home, viewer, editor
-   - Switch scenes by reinitializing scene-specific entities
+export { moduleExample };
+```
 
-3. **Implement Runtime Overrides**
+Modules are loaded in `app.js` and initialized with their corresponding entities.
 
-   - Allow modules like header-extended to extend header-base
-   - Override or append behavior without rewriting base
+## Routing & Navigation
 
+The routing system enables seamless navigation between different sections without page reloads. Key elements:
+
+1. **Route Components**: Entities with `route` components define navigable sections
+2. **NavSystem**: Handles navigation logic and route changes
+3. **URL Hash**: Routes are reflected in URL hashes for deep linking
+4. **Section Visibility**: Automatically manages which sections are visible
+
+When a navigation event occurs:
+1. NavSystem receives the event
+2. Updates the URL hash
+3. Updates route components on relevant entities
+4. Shows/hides sections based on active route
+5. Updates active state in navigation links
+
+## Theming System
+
+The theming system provides runtime theme switching with smooth transitions:
+
+1. **Theme Definitions**: CSS variables defined in `themes.css`
+2. **Theme Components**: Entities with theme preferences
+3. **Theme Selector**: UI for switching themes
+4. **ThemeSystem**: Applies themes and handles transitions
+5. **LocalStorage**: Persists theme preferences
+
+Themes are applied through CSS variables and data attributes:
+```html
+<html data-theme="dark">
+```
+
+## Project Showcases
+
+The project showcase is designed to highlight work in an engaging way:
+
+### Current Implementation
+- Grid layout of project cards
+- Images, descriptions, technologies, and links
+- Interactive hover effects
+- Technology tag displays
+
+### Planned Dynamic Project Cards (Wildcards)
+- **Interactive Previews**: Mini demos embedded in cards
+- **Card Expansions**: Cards that expand to full views
+- **Carousel Mode**: Slide-based project navigation
+- **Filter System**: Sort by technology, type, date
+- **Custom Interactions**: Project-specific interactions
+
+## Development Roadmap
+
+### Phase 1: Core Architecture (Complete)
+- ✅ ECS Implementation
+- ✅ Basic modules (header, about, projects, skills)
+- ✅ Theme system
+- ✅ Navigation system
+
+### Phase 2: Enhanced Components (Current)
+- 🔄 Dynamic project cards
+- 🔄 Interactive skills visualization
+- 🔄 Animations and transitions
+- 🔄 Responsive design enhancements
+
+### Phase 3: Advanced Features (Upcoming)
+- ⬜ Project wildcards/slides system
+- ⬜ Interactive canvas backgrounds
+- ⬜ WebGL-powered effects
+- ⬜ Content management system
+- ⬜ Performance optimizations
+
+### Phase 4: Extensibility (Future)
+- ⬜ Plugin system
+- ⬜ Custom editors
+- ⬜ Export/import configurations
+- ⬜ Theme creator
+
+## Project Wildcards/Slides System
+
+The project wildcards/slides system will be a major focus of the next development phase. This system will:
+
+1. Allow each project to have custom interactive elements
+2. Support multiple display modes (card, slide, expanded)
+3. Enable project-specific behaviors and demos
+4. Create a unified API for handling diverse project types
+
+### Wildcard Implementation Plan
+
+1. **Define Wildcard Interface**:
    ```javascript
-   const headerExtended = {
-     ...headerBase,
-     init(container) {
-       headerBase.init(container);
-       container.innerHTML += `<button>Extra</button>`;
-     }
-   }
+   // Common interface for all project wildcards
+   const ProjectWildcard = {
+     init(container, data) {},
+     render(mode) {},
+     handleInteraction(event) {},
+     cleanup() {}
+   };
    ```
 
-4. **Optional Advanced Systems**
+2. **Create Base Implementations**:
+   - StandardProjectCard
+   - InteractiveProjectCard
+   - WebGLProjectCard
+   - DemoProjectCard
 
-   - WebGLRenderer: Inject GPU-powered visuals via canvas entity
-   - AI Helper Agent: Logs module usage, helps with routing/debug
-   - SettingsPanel: Floating dev panel to hot-switch modules
+3. **Dynamic Loading System**:
+   - Load project-specific JS modules on demand
+   - Inject project-specific CSS
+   - Initialize appropriate wildcard based on project type
 
-## Future Vision
+4. **Slide Controller**:
+   - Navigation between projects in slide mode
+   - Transition effects between slides
+   - Fullscreen mode support
 
-This engine can evolve into:
+5. **Integration with ECS**:
+   - Create ProjectSystem to manage wildcards
+   - Define ProjectWildcardComponent to store slide data
+   - Connect with existing navigation system
 
-- A platform for showcasing multiple identities or versions of yourself
-- A base for procedural games or VR/AR installations
-- A collaborative space for other creators to plug in their modules
+## File Documentation Standards
 
-## Reminders for Dev & AI Agents
+All files should include a comprehensive header that explains:
 
-- Follow ECS structure
-- Keep state out of modules — systems control behavior
-- Prefer extend over replace
-- Keep modules pure (no global side effects)
-- Write docstrings or comments for agent readability
-- Only destroy what you initialized
+1. Purpose of the file
+2. Dependencies and relationships
+3. Design decisions and patterns used
+4. Usage examples if applicable
 
-## First Milestones
+### File Header Template
 
-- [ ] Core ECS (Entity, Component, System, Engine)
-- [ ] Register + load header-base and projects modules
-- [ ] Theme system + switcher
-- [ ] Scene transition logic
-- [ ] Settings panel for hot module loading
+```javascript
+/**
+ * @fileoverview [Brief description of file purpose]
+ * 
+ * [Detailed description explaining the role of this file in the system]
+ * 
+ * @module [Module name]
+ * @requires [Dependencies]
+ * 
+ * @design [Design patterns or architectural decisions]
+ * 
+ * @example
+ * // Example usage
+ * import { X } from './path/to/file.js';
+ * X.doSomething();
+ */
+```
+
+### Example Implementation
+
+```javascript
+/**
+ * @fileoverview Theme System for the Portfolio Engine
+ * 
+ * This system manages theme selection, application, and persistence.
+ * It operates on entities with theme components and updates the DOM
+ * when theme changes occur. The system listens for theme change events
+ * and applies CSS variables through data attributes.
+ * 
+ * @module ThemeSystem
+ * @requires System from ../engine/system.js
+ * @requires config from ../config.js
+ * 
+ * @design Uses the Observer pattern to react to theme change events.
+ * Implements a transition system for smooth theme switching.
+ * 
+ * @example
+ * // Register theme system
+ * import { ThemeSystem } from './systems/ThemeSystem.js';
+ * ecs.registerSystem(new ThemeSystem());
+ */
+```
+
+## Contributing Guidelines
+
+When contributing to this project:
+
+1. **Follow ECS Principles**: Keep data in components, logic in systems
+2. **Document Everything**: Add comprehensive documentation for new code
+3. **Test Interactively**: Ensure components work well together
+4. **Design for Extension**: Make code extensible for future needs
+5. **Respect Separation of Concerns**: Modules should have a single purpose
+6. **Use Events for Communication**: Systems should communicate via events
+7. **Optimize Responsibly**: Balance performance with maintainability
+
+## Directory Structure Reference
+
+```
+portfolio-engine/
+├── app.js                 # Application bootstrap and initialization
+├── config.js              # Global configuration and settings
+├── index.html             # Main HTML entry point
+│
+├── engine/                # ECS architecture core
+│   ├── ecs.js             # ECS main controller
+│   ├── entity.js          # Entity implementation
+│   └── system.js          # Base System class
+│
+├── modules/               # Reusable feature modules
+│   ├── header/            # Header components
+│   │   ├── header-base.js
+│   │   └── header-extended.js
+│   ├── about.js           # About section module
+│   ├── contact.js         # Contact form module
+│   ├── footer.js          # Footer module
+│   ├── navigation.js      # Navigation menu module  
+│   ├── projects.js        # Projects showcase module
+│   ├── skills.js          # Skills visualization module
+│   └── theme-selector.js  # Theme switching UI module
+│
+├── systems/               # System implementations
+│   ├── NavSystem.js       # Navigation and routing system
+│   ├── RenderSystem.js    # DOM rendering system
+│   ├── RoutingSystem.js   # URL and route management
+│   └── ThemeSystem.js     # Theme management system
+│
+├── styles/                # CSS styles
+│   ├── base.css           # Core styles and layout
+│   └── themes.css         # Theme definitions and variables
+│
+└── assets/                # Static assets
+    └── images/            # Image resources
+```
+
+---
+
+By following these documentation standards and development plans, we ensure that the Portfolio Engine remains maintainable, extensible, and well-documented throughout its development lifecycle.

@@ -1,3 +1,5 @@
+import { Entity } from './entity.js';
+
 class ECS {
   constructor() {
     this.entities = [];
@@ -5,7 +7,7 @@ class ECS {
   }
 
   createEntity() {
-    const entity = new Entity();
+    const entity = new Entity(); // now Entity has hasComponent method etc.
     this.entities.push(entity);
     return entity;
   }
@@ -25,18 +27,4 @@ class ECS {
   }
 }
 
-class Entity {
-  constructor() {
-    this.components = {};
-  }
-
-  addComponent(name, data) {
-    this.components[name] = data;
-  }
-
-  getComponent(name) {
-    return this.components[name];
-  }
-}
-
-export { ECS, Entity };
+export { ECS };

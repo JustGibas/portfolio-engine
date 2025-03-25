@@ -7,21 +7,21 @@ const projects = {
         title: 'Portfolio Engine',
         description: 'A modular, game-inspired system that showcases the evolution of a creative technologist.',
         technologies: ['JavaScript', 'ECS Architecture', 'CSS'],
-        image: 'assets/images/portfolio-engine.jpg',
+        image: 'assets/images/portfolio-engine.jpg', // Ensure this file exists, else use a fallback.
         link: '#'
       },
       {
         title: 'Interactive Data Visualization',
         description: 'Dynamic visualization of complex datasets using D3.js and WebGL.',
         technologies: ['D3.js', 'WebGL', 'React'],
-        image: 'assets/images/data-viz.jpg',
+        image: 'assets/images/data-viz.jpg', // Ensure this file exists
         link: '#'
       },
       {
         title: 'AI-Powered Chatbot',
         description: 'Natural language processing chatbot with machine learning capabilities.',
         technologies: ['Python', 'TensorFlow', 'NLP'],
-        image: 'assets/images/chatbot.jpg',
+        image: 'assets/images/chatbot.jpg', // Ensure this file exists
         link: '#'
       }
     ];
