@@ -1,3 +1,10 @@
+/**
+ * @fileoverview ECS Controller.
+ * Manages entities and systems for the Portfolio Engine.
+ * @module ECS
+ * @requires Entity from ./entity.js
+ */
+
 import { Entity } from './entity.js';
 
 class ECS {

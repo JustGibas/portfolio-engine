@@ -1,3 +1,8 @@
+/**
+ * @fileoverview About Module.
+ * Renders the about section content for the portfolio.
+ * @module about
+ */
 const about = {
   init(entity) {
     const container = entity.getComponent('dom').container;

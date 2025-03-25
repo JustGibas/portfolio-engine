@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Contact Module.
+ * Renders the contact form and manages form functionality.
+ * @module contact
+ */
 const contact = {
   init(container) {
     container.innerHTML = `

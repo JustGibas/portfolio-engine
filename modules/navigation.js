@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Navigation Module.
+ * Renders the main navigation menu and dispatches navigation events.
+ * @module navigation
+ */
 const navigation = {
   init(entity) {
     const container = entity.getComponent('dom').container;

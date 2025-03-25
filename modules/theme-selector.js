@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Theme Selector Module.
+ * Provides a UI to choose a theme and dispatches theme change events.
+ * @module theme-selector
+ * @requires config from ../config.js
+ */
 import config from '../config.js';
 
 const themeSelector = {

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Footer Module.
+ * Renders the footer content for the portfolio.
+ * @module footer
+ */
 class Footer {
   constructor() {
     this.container = null;

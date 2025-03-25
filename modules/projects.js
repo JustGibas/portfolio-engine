@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Projects Module.
+ * Renders the project showcase section with project cards.
+ * @module projects
+ */
 const projects = {
   init(entity) {
     const container = entity.getComponent('dom').container;

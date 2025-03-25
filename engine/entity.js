@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Entity implementation for the Portfolio Engine ECS.
+ * Provides methods to add, retrieve, and remove components.
+ * @module Entity
+ */
 class Entity {
   constructor() {
     this.components = {};

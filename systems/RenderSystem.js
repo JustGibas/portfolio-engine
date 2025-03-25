@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Render System.
+ * Updates the DOM according to the state changes of entities.
+ * @module RenderSystem
+ * @requires System from ../engine/system.js
+ */
 import { System } from '../engine/system.js';
 
 class RenderSystem extends System {

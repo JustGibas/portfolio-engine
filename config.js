@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Configuration Settings for the Portfolio Engine.
+ * Contains global settings for themes, modules, systems, and routing.
+ * @module config
+ */
+
 const config = {
   theme: {
     default: 'light',
@@ -7,7 +13,6 @@ const config = {
     header: 'header-base',
     navigation: 'navigation',
     about: 'about',
-    skills: 'skills',
     projects: 'projects',
     contact: 'contact',
     footer: 'footer',
@@ -21,7 +26,7 @@ const config = {
   },
   routing: {
     defaultRoute: 'about',
-    routes: ['about', 'skills', 'projects', 'contact']
+    routes: ['about', 'projects', 'contact']
   }
 };
 

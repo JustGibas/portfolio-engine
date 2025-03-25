@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Base System class for the Portfolio Engine.
+ * Systems extend this class to implement domain-specific behavior.
+ * @module System
+ */
 class System {
   constructor() {
     this.entities = [];

@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Navigation System for the Portfolio Engine.
+ * This system listens for navigation events and updates route and view visibility.
+ * @module NavSystem
+ * @requires System from ../engine/system.js
+ */
+
 import { System } from '../engine/system.js';
 
 class NavSystem extends System {

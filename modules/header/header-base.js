@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Base Header Module.
+ * Renders the basic header content.
+ * @module headerBase
+ */
 const headerBase = {
   init(container) {
     container.innerHTML = `

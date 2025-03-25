@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Theme System.
+ * Manages the application, persistence, and transition of themes.
+ * @module ThemeSystem
+ * @requires System from ../engine/system.js
+ * @requires config from ../config.js
+ */
 import { System } from '../engine/system.js';
 import config from '../config.js';
 

@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Routing System.
+ * Handles URL hash changes and updates route components accordingly.
+ * @module RoutingSystem
+ * @requires System from ../engine/system.js
+ */
 import { System } from '../engine/system.js';
 
 class RoutingSystem extends System {
