@@ -12,7 +12,7 @@ class RoutingSystem extends System {
     this.currentRoute = null;
   }
 
-  init(entities) {
+  init() {
     window.addEventListener('hashchange', () => {
       this.handleRouteChange();
     });
@@ -36,7 +36,7 @@ class RoutingSystem extends System {
     });
   }
 
-  update(entities) {
+  update() {
     // No need to update every frame, routing is event-driven
   }
 }

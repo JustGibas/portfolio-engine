@@ -20,7 +20,6 @@
  * @requires headerBase from ./modules/header/header-base.js
  * @requires navigation from ./modules/navigation.js
  * @requires projects from ./modules/projects.js
- * @requires skills from ./modules/skills.js
  * @requires about from ./modules/about.js
  * @requires contact from ./modules/contact.js
  * @requires footer from ./modules/footer.js
@@ -40,12 +39,11 @@ import { NavSystem } from './systems/NavSystem.js';
 import { headerBase } from './modules/header/header-base.js';
 import { navigation } from './modules/navigation.js';
 import { projects } from './modules/projects.js';
-import { skills } from './modules/skills.js';
 import { about } from './modules/about.js';
 import { contact } from './modules/contact.js';
 import { footer } from './modules/footer.js';
 import { themeSelector } from './modules/theme-selector.js';
-import config from './config.js;
+import config from './config.js';
 
 /**
  * Create the main ECS instance that will manage all entities and systems.
