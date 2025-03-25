@@ -5,12 +5,23 @@ const config = {
   },
   modules: {
     header: 'header-base',
-    projects: 'projects'
+    navigation: 'navigation',
+    about: 'about',
+    skills: 'skills',
+    projects: 'projects',
+    contact: 'contact',
+    footer: 'footer',
+    themeSelector: 'theme-selector'
   },
   systems: {
     themeSystem: true,
-    renderSystem: false,
-    routingSystem: false
+    renderSystem: true,
+    routingSystem: true,
+    navSystem: true
+  },
+  routing: {
+    defaultRoute: 'about',
+    routes: ['about', 'skills', 'projects', 'contact']
   }
 };
 

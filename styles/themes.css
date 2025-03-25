@@ -1,30 +1,106 @@
 :root {
   --primary-color: #3498db;
   --secondary-color: #2ecc71;
+  --accent-color: #e74c3c;
   --background-color: #f4f4f4;
-  --text-color: #333;
+  --card-bg-color: #ffffff;
+  --text-color: #333333;
+  --text-light-color: #777777;
+  --border-color: #dddddd;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --header-bg-color: #333333;
+  --nav-bg-color: #444444;
+  --footer-bg-color: #333333;
 }
 
+/* Dark theme */
 [data-theme="dark"] {
   --primary-color: #1abc9c;
   --secondary-color: #e74c3c;
-  --background-color: #333;
+  --accent-color: #f39c12;
+  --background-color: #222222;
+  --card-bg-color: #333333;
   --text-color: #f4f4f4;
+  --text-light-color: #aaaaaa;
+  --border-color: #555555;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --header-bg-color: #1a1a1a;
+  --nav-bg-color: #2a2a2a;
+  --footer-bg-color: #1a1a1a;
 }
 
+/* Neon theme */
+[data-theme="neon"] {
+  --primary-color: #00ff99;
+  --secondary-color: #ff00ff;
+  --accent-color: #ffff00;
+  --background-color: #0a0a20;
+  --card-bg-color: #1a1a2e;
+  --text-color: #ffffff;
+  --text-light-color: #aaaaff;
+  --border-color: #00ffff;
+  --shadow-color: rgba(0, 255, 255, 0.2);
+  --header-bg-color: #080818;
+  --nav-bg-color: #121225;
+  --footer-bg-color: #080818;
+}
+
+/* Apply theme variables */
 body {
   background-color: var(--background-color);
   color: var(--text-color);
 }
 
 header {
-  background-color: var(--primary-color);
+  background-color: var(--header-bg-color);
+}
+
+.main-nav {
+  background-color: var(--nav-bg-color);
 }
 
 .project-card {
-  border-color: var(--secondary-color);
+  background-color: var(--card-bg-color);
+  border-color: var(--border-color);
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.tech-badge {
+  background-color: var(--secondary-color);
+  color: var(--card-bg-color);
+}
+
+.project-link {
+  background-color: var(--primary-color);
+}
+
+.project-link:hover {
+  background-color: var(--accent-color);
+}
+
+.skill-bar {
+  background-color: var(--border-color);
+}
+
+.skill-progress {
+  background-color: var(--primary-color);
+}
+
+.theme-selector {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.theme-btn {
+  background-color: var(--nav-bg-color);
+  color: var(--text-color);
+}
+
+.theme-btn.active {
+  box-shadow: 0 0 0 2px var(--primary-color);
 }
 
 footer {
-  background-color: var(--primary-color);
+  background-color: var(--footer-bg-color);
 }
