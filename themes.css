@@ -1,3 +1,5 @@
+/* Theme definitions and variables */
+
 :root {
   --primary-color: #3498db;
   --secondary-color: #2ecc71;
@@ -8,16 +10,16 @@
   --text-light-color: #777777;
   --border-color: #dddddd;
   --shadow-color: rgba(0, 0, 0, 0.1);
-  --header-bg-color: #333333;
-  --nav-bg-color: #444444;
-  --footer-bg-color: #333333;
+  --header-bg-color: #a1a1a1;
+  --nav-bg-color: #8d8d8d;
+  --footer-bg-color: #a1a1a1;
 }
 
 /* Dark theme */
 [data-theme="dark"] {
   --primary-color: #1abc9c;
-  --secondary-color: #e74c3c;
-  --accent-color: #f39c12;
+  --secondary-color: #cc3f2f;
+  --accent-color: #ecab42;
   --background-color: #222222;
   --card-bg-color: #333333;
   --text-color: #f4f4f4;

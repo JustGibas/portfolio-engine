@@ -1,32 +1,45 @@
 /**
- * @fileoverview Configuration Settings for the Portfolio Engine.
- * Contains global settings for themes, modules, systems, and routing.
+ * @fileoverview Portfolio Engine Configuration
+ * 
+ * A simplified configuration file that defines the structure and behavior
+ * of the portfolio application. This centralized configuration makes it
+ * easy to modify sections, themes, and other settings.
+ * 
  * @module config
  */
 
 const config = {
+  // Site information
+  site: {
+    title: "Portfolio Engine",
+    author: "Justinas Gibas",
+    description: "A dynamic portfolio built with ECS architecture",
+    email: "justas.gibas@gmail.com",
+    location: "Vilnius, Lithuania",
+    socialProfileImage: "https://gravatar.com/avatar/0e19fb6b602b0b3793aa42af81f69ade?size=256"
+  },
+  
+  // Theme settings
   theme: {
-    default: 'light',
+    default: 'dark',
     availableThemes: ['light', 'dark', 'neon']
   },
-  modules: {
-    header: 'header-base',
-    navigation: 'navigation',
-    about: 'about',
-    projects: 'projects',
-    contact: 'contact',
-    footer: 'footer',
-    themeSelector: 'theme-selector'
+  
+  // Navigation and content structure is now dynamically loaded
+  // from the pages directory instead of being hardcoded here
+  
+  // Default settings
+  defaults: {
+    route: 'about',     // Default route to load
+    showLoadingIndicators: true,
+    animateTransitions: true
   },
-  systems: {
-    themeSystem: true,
-    renderSystem: true,
-    routingSystem: true,
-    navSystem: true
-  },
-  routing: {
-    defaultRoute: 'about',
-    routes: ['about', 'projects', 'contact']
+  
+  // Advanced settings (for developers)
+  advanced: {
+    debug: false,       // Enable debug logging
+    systemRefreshRate: 60,  // How often systems update in Hz
+    enableLazyLoading: true // Whether to lazy load content
   }
 };
 

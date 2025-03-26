@@ -1,10 +1,20 @@
 /**
  * @fileoverview Contact Module.
+ * 
+ * thins need to become Page
+ * not a module or its a specific modeulet that defines a page
  * Renders the contact form and manages form functionality.
+ * this need sto take date from configuration
  * @module contact
  */
+import { cssLoader } from '../../engine/css-loader.js';
+import config from '../../config.js';
+
 const contact = {
-  init(container) {
+  async init(container) {
+    // Load page-specific CSS
+    await cssLoader.loadLocalCSS(import.meta.url);
+    
     container.innerHTML = `
       <h2>Contact</h2>
       <form id="contact-form">

@@ -1,0 +1,909 @@
+app.js:37 Portfolio Engine: Starting initialization...
+EventSystem.js:30 Event System: Initialized
+EventSystem.js:36 Event System: Core event listeners registered
+page.js:97 Page: Starting page discovery
+page.js:281 Page: Found page module in new structure: about
+page.js:150 Page: Found page module: about
+page.js:281 Page: Found page module in new structure: projects
+page.js:150 Page: Found page module: projects
+page.js:281 Page: Found page module in new structure: contact
+page.js:150 Page: Found page module: contact
+page.js:101 Page: Found 3 pages
+page.js:117 Page: Starting project discovery
+app.js:66 Configuration: 3 sections, 3 themes
+EntityCreator.js:42 EntityCreator: Creating entities from configuration
+EntityCreator.js:54 EntityCreator: Creating header entity
+EntityCreator.js:73 EntityCreator: Creating 3 section entities
+EntityCreator.js:101 EntityCreator: Creating footer entity
+EntityCreator.js:46 EntityCreator: All entities created successfully
+ModuleLoader.js:40 ModuleLoader: Initializing with initial route about
+ModuleLoader.js:57 ModuleLoader: Handling route change to "about"
+ModuleLoader.js:94 ModuleLoader: Loading module "about" (looking in pages/about/about.js)
+page.js:358 Trying to load module from: ../../pages/about/about.js
+app.js:82 Portfolio Engine: Starting ECS system...
+LayoutInitializerSystem.js:45 LayoutInitializer: Starting layout component initialization
+LayoutInitializerSystem.js:52 LayoutInitializer: Found header entity, initializing
+LayoutInitializerSystem.js:73 LayoutInitializer: Header initialized
+LayoutInitializerSystem.js:52 LayoutInitializer: Found footer entity, initializing
+LayoutInitializerSystem.js:85 LayoutInitializer: Footer initialized
+LayoutInitializerSystem.js:63 LayoutInitializer: Layout initialization complete
+app.js:88 Portfolio Engine: Initialization complete
+page.js:360 Successfully loaded module from ../../pages/about/about.js
+page.js:209 Page: Loaded project config from ../../pages/projects/Portfolio_Engine/project.js
+page.js:177 Page: Found project: Portfolio Engine
+page.js:204 
+            
+            
+           GET http://127.0.0.1:5502/pages/projects/Data_Visualization/project.js net::ERR_ABORTED 404 (Not Found)
+_loadProjectData @ page.js:204
+_performProjectDiscovery @ page.js:174
+discoverProjects @ page.js:119
+initApp @ app.js:61
+await in initApp
+(anonymous) @ app.js:95
+page.js:204 
+            
+            
+           GET http://127.0.0.1:5502/pages/projects/AI_Chatbot/project.js net::ERR_ABORTED 404 (Not Found)
+_loadProjectData @ page.js:204
+_performProjectDiscovery @ page.js:174
+discoverProjects @ page.js:119
+initApp @ app.js:61
+await in initApp
+(anonymous) @ app.js:95
+page.js:223 Page: No project.js found for Data_Visualization, using defaults
+overrideMethod @ hook.js:608
+_loadProjectData @ page.js:223
+await in _loadProjectData
+_performProjectDiscovery @ page.js:174
+discoverProjects @ page.js:119
+initApp @ app.js:61
+await in initApp
+(anonymous) @ app.js:95
+page.js:223 Page: No project.js found for AI_Chatbot, using defaults
+overrideMethod @ hook.js:608
+_loadProjectData @ page.js:223
+await in _loadProjectData
+_performProjectDiscovery @ page.js:174
+discoverProjects @ page.js:119
+initApp @ app.js:61
+await in initApp
+(anonymous) @ app.js:95
+css-loader.js:35 CSS Loader: Loaded http://127.0.0.1:5502/modules/header/header-base/header-base.css
+header-base.js:61 Header base initialized with navigation and theme selector submodules
+css-loader.js:35 CSS Loader: Loaded http://127.0.0.1:5502/modules/footer/footer.css
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from '<URL>' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+css-loader.js:40 CSS Loader: Failed to load ./about/about/about.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./about/about/about.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+init @ ModuleLoader.js:49
+initApp @ app.js:79
+await in initApp
+(anonymous) @ app.js:95
+css-loader.js:40 CSS Loader: Failed to load ./about/about.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./about/about.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:385
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+init @ ModuleLoader.js:49
+initApp @ app.js:79
+await in initApp
+(anonymous) @ app.js:95
+page.js:230 
+            
+            
+           GET http://127.0.0.1:5502/pages/projects/Data_Visualization/README.md 404 (Not Found)
+_loadProjectData @ page.js:230
+await in _loadProjectData
+_performProjectDiscovery @ page.js:174
+discoverProjects @ page.js:119
+initApp @ app.js:61
+await in initApp
+(anonymous) @ app.js:95
+page.js:177 Page: Found project: Data Visualization
+page.js:230 
+            
+            
+           GET http://127.0.0.1:5502/pages/projects/AI_Chatbot/README.md 404 (Not Found)
+_loadProjectData @ page.js:230
+await in _loadProjectData
+_performProjectDiscovery @ page.js:174
+discoverProjects @ page.js:119
+initApp @ app.js:61
+await in initApp
+(anonymous) @ app.js:95
+page.js:177 Page: Found project: AI Chatbot
+page.js:121 Page: Found 3 projects
+css-loader.js:35 CSS Loader: Loaded http://127.0.0.1:5502/modules/header/submodules/navigaton/navigation.css
+navigation.js:81 Navigation module initialized with 3 navigation items
+css-loader.js:40 CSS Loader: Failed to load ./modules/about/about.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./modules/about/about.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:385
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+init @ ModuleLoader.js:49
+initApp @ app.js:79
+await in initApp
+(anonymous) @ app.js:95
+css-loader.js:35 CSS Loader: Loaded http://127.0.0.1:5502/modules/header/submodules/theme-selector/theme-selector.css
+theme-selector.js:73 Theme selector initialized with 3 theme options
+css-loader.js:40 CSS Loader: Failed to load ./modules/about/about/about/about.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./modules/about/about/about/about.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+init @ ModuleLoader.js:49
+initApp @ app.js:79
+await in initApp
+(anonymous) @ app.js:95
+css-loader.js:35 CSS Loader: Loaded ./pages/about/about.css
+page.js:395 Page module 'about' processing complete
+about.js:83 About page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "about"
+css-loader.js:40 CSS Loader: Failed to load ./pages/about/about/about/about.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./pages/about/about/about/about.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+init @ ModuleLoader.js:49
+initApp @ app.js:79
+await in initApp
+(anonymous) @ app.js:95
+css-loader.js:35 CSS Loader: Loaded http://127.0.0.1:5502/pages/about/about.css
+css-loader.js:40 CSS Loader: Failed to load about/about.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load about/about.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+init @ ModuleLoader.js:49
+initApp @ app.js:79
+await in initApp
+(anonymous) @ app.js:95
+profile.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/profile.jpg 404 (Not Found)
+Image
+render @ about.js:61
+init @ about.js:40
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+init @ ModuleLoader.js:49
+initApp @ app.js:79
+await in initApp
+(anonymous) @ app.js:95
+via.placeholder.com/300x300?text=Profile+Image:1 
+            
+            
+           GET https://via.placeholder.com/300x300?text=Profile+Image net::ERR_NAME_NOT_RESOLVED
+Image
+onerror @ VM3019 :1
+EventSystem.js:55 Event System: Theme change event received for theme: dark
+EventSystem.js:55 Event System: Theme change event received for theme: light
+EventSystem.js:45 Event System: Navigation event received for route: projects
+ModuleLoader.js:57 ModuleLoader: Handling route change to "projects"
+ModuleLoader.js:94 ModuleLoader: Loading module "projects" (looking in pages/projects/projects.js)
+about.js:87 About page unmounted
+page.js:358 Trying to load module from: ../../pages/projects/projects.js
+page.js:360 Successfully loaded module from ../../pages/projects/projects.js
+css-loader.js:40 CSS Loader: Failed to load ./projects/projects/projects.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./projects/projects/projects.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:40 CSS Loader: Failed to load ./projects/projects.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./projects/projects.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:385
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:40 CSS Loader: Failed to load ./modules/projects/projects/projects/projects.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./modules/projects/projects/projects/projects.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:40 CSS Loader: Failed to load ./modules/projects/projects.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./modules/projects/projects.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:385
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:40 CSS Loader: Failed to load ./pages/projects/projects/projects/projects.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./pages/projects/projects/projects/projects.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:35 CSS Loader: Loaded ./pages/projects/projects.css
+page.js:395 Page module 'projects' processing complete
+projects.js:166 Projects page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "projects"
+css-loader.js:35 CSS Loader: Loaded http://127.0.0.1:5502/pages/projects/projects.css
+css-loader.js:40 CSS Loader: Failed to load projects/projects.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load projects/projects.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+portfolio-engine.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/portfolio-engine.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+data_visualization.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/data_visualization.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+ai_chatbot.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/ai_chatbot.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+placeholder.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/placeholder.jpg 404 (Not Found)
+Image
+onerror @ VM3066 :1
+EventSystem.js:45 Event System: Navigation event received for route: contact
+ModuleLoader.js:57 ModuleLoader: Handling route change to "contact"
+ModuleLoader.js:94 ModuleLoader: Loading module "contact" (looking in pages/contact/contact.js)
+projects.js:170 Projects page unmounted
+page.js:358 Trying to load module from: ../../pages/contact/contact.js
+page.js:360 Successfully loaded module from ../../pages/contact/contact.js
+css-loader.js:40 CSS Loader: Failed to load ./contact/contact/contact.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./contact/contact/contact.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:40 CSS Loader: Failed to load ./contact/contact.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./contact/contact.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:385
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:40 CSS Loader: Failed to load ./modules/contact/contact/contact/contact.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./modules/contact/contact/contact/contact.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:40 CSS Loader: Failed to load ./modules/contact/contact.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./modules/contact/contact.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:385
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:35 CSS Loader: Loaded ./pages/contact/contact.css
+page.js:395 Page module 'contact' processing complete
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "contact"
+css-loader.js:40 CSS Loader: Failed to load ./pages/contact/contact/contact/contact.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load ./pages/contact/contact/contact/contact.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+css-loader.js:35 CSS Loader: Loaded http://127.0.0.1:5502/pages/contact/contact.css
+css-loader.js:40 CSS Loader: Failed to load contact/contact.css
+overrideMethod @ hook.js:608
+link.onerror @ css-loader.js:40
+css-loader.js:120 CSS Loader: Failed to load contact/contact.css, trying next path
+overrideMethod @ hook.js:608
+(anonymous) @ css-loader.js:120
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+(anonymous) @ css-loader.js:123
+Promise.catch
+_tryPathsSequentially @ css-loader.js:119
+tryLoadCSS @ css-loader.js:103
+load @ page.js:384
+await in load
+switchTo @ page.js:580
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+EventSystem.js:45 Event System: Navigation event received for route: projects
+ModuleLoader.js:57 ModuleLoader: Handling route change to "projects"
+ModuleLoader.js:94 ModuleLoader: Loading module "projects" (looking in pages/projects/projects.js)
+page.js:339 Page module 'projects' loaded from cache
+projects.js:166 Projects page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "projects"
+portfolio-engine.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/portfolio-engine.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+data_visualization.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/data_visualization.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+ai_chatbot.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/ai_chatbot.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+placeholder.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/placeholder.jpg 404 (Not Found)
+Image
+onerror @ VM3095 :1
+EventSystem.js:45 Event System: Navigation event received for route: about
+ModuleLoader.js:57 ModuleLoader: Handling route change to "about"
+ModuleLoader.js:94 ModuleLoader: Loading module "about" (looking in pages/about/about.js)
+projects.js:170 Projects page unmounted
+page.js:339 Page module 'about' loaded from cache
+about.js:83 About page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "about"
+profile.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/profile.jpg 404 (Not Found)
+Image
+render @ about.js:61
+init @ about.js:40
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+via.placeholder.com/300x300?text=Profile+Image:1 
+            
+            
+           GET https://via.placeholder.com/300x300?text=Profile+Image net::ERR_NAME_NOT_RESOLVED
+Image
+onerror @ VM3101 :1
+EventSystem.js:45 Event System: Navigation event received for route: projects
+ModuleLoader.js:57 ModuleLoader: Handling route change to "projects"
+ModuleLoader.js:94 ModuleLoader: Loading module "projects" (looking in pages/projects/projects.js)
+about.js:87 About page unmounted
+page.js:339 Page module 'projects' loaded from cache
+projects.js:166 Projects page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "projects"
+portfolio-engine.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/portfolio-engine.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+data_visualization.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/data_visualization.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+ai_chatbot.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/ai_chatbot.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+placeholder.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/placeholder.jpg 404 (Not Found)
+Image
+onerror @ VM3107 :1
+EventSystem.js:45 Event System: Navigation event received for route: about
+ModuleLoader.js:57 ModuleLoader: Handling route change to "about"
+ModuleLoader.js:94 ModuleLoader: Loading module "about" (looking in pages/about/about.js)
+projects.js:170 Projects page unmounted
+page.js:339 Page module 'about' loaded from cache
+about.js:83 About page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "about"
+profile.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/profile.jpg 404 (Not Found)
+Image
+render @ about.js:61
+init @ about.js:40
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+via.placeholder.com/300x300?text=Profile+Image:1 
+            
+            
+           GET https://via.placeholder.com/300x300?text=Profile+Image net::ERR_NAME_NOT_RESOLVED
+Image
+onerror @ VM3115 :1
+EventSystem.js:45 Event System: Navigation event received for route: projects
+ModuleLoader.js:57 ModuleLoader: Handling route change to "projects"
+ModuleLoader.js:94 ModuleLoader: Loading module "projects" (looking in pages/projects/projects.js)
+about.js:87 About page unmounted
+page.js:339 Page module 'projects' loaded from cache
+projects.js:166 Projects page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "projects"
+portfolio-engine.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/portfolio-engine.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+data_visualization.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/data_visualization.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+ai_chatbot.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/ai_chatbot.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+placeholder.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/placeholder.jpg 404 (Not Found)
+Image
+onerror @ VM3120 :1
+EventSystem.js:45 Event System: Navigation event received for route: contact
+ModuleLoader.js:57 ModuleLoader: Handling route change to "contact"
+ModuleLoader.js:94 ModuleLoader: Loading module "contact" (looking in pages/contact/contact.js)
+projects.js:170 Projects page unmounted
+page.js:339 Page module 'contact' loaded from cache
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "contact"
+EventSystem.js:45 Event System: Navigation event received for route: projects
+ModuleLoader.js:57 ModuleLoader: Handling route change to "projects"
+ModuleLoader.js:94 ModuleLoader: Loading module "projects" (looking in pages/projects/projects.js)
+page.js:339 Page module 'projects' loaded from cache
+projects.js:166 Projects page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "projects"
+portfolio-engine.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/portfolio-engine.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+data_visualization.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/data_visualization.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+ai_chatbot.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/ai_chatbot.jpg 404 (Not Found)
+Image
+render @ projects.js:83
+init @ projects.js:43
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+placeholder.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/placeholder.jpg 404 (Not Found)
+Image
+onerror @ VM3133 :1
+EventSystem.js:45 Event System: Navigation event received for route: about
+ModuleLoader.js:57 ModuleLoader: Handling route change to "about"
+ModuleLoader.js:94 ModuleLoader: Loading module "about" (looking in pages/about/about.js)
+projects.js:170 Projects page unmounted
+page.js:339 Page module 'about' loaded from cache
+about.js:83 About page mounted
+ModuleLoader.js:99 ModuleLoader: Successfully loaded module "about"
+profile.jpg:1 
+            
+            
+           GET http://127.0.0.1:5502/assets/images/profile.jpg 404 (Not Found)
+Image
+render @ about.js:61
+init @ about.js:40
+await in init
+init @ page.js:448
+switchTo @ page.js:583
+await in switchTo
+loadModule @ ModuleLoader.js:98
+handleRouteChange @ ModuleLoader.js:85
+(anonymous) @ ModuleLoader.js:45
+(anonymous) @ navigation.js:70
+via.placeholder.com/300x300?text=Profile+Image:1 
+            
+            
+           GET https://via.placeholder.com/300x300?text=Profile+Image net::ERR_NAME_NOT_RESOLVED
+Image
+onerror @ (index):1
+EventSystem.js:55 Event System: Theme change event received for theme: dark
+EventSystem.js:55 Event System: Theme change event received for theme: neon
+EventSystem.js:55 Event System: Theme change event received for theme: dark
