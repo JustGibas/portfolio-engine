@@ -1,9 +1,12 @@
 /**
  * @fileoverview Portfolio Engine Configuration
  * 
- * A simplified configuration file that defines the structure and behavior
- * of the portfolio application. This centralized configuration makes it
- * easy to modify sections, themes, and other settings.
+ * A centralized configuration file that defines the structure, behavior,
+ * and asset management of the portfolio application. This unified configuration 
+ * makes it easy to modify sections, themes, assets, and other settings.
+ * 
+ * Previously, asset configuration was in a separate file (asset-config.js),
+ * but it has now been integrated here to simplify the configuration structure.
  * 
  * @module config
  */
@@ -40,6 +43,39 @@ const config = {
     debug: false,       // Enable debug logging
     systemRefreshRate: 60,  // How often systems update in Hz
     enableLazyLoading: true // Whether to lazy load content
+  },
+  
+  // Asset configuration (merged from asset-config.js)
+  assets: {
+    // Base directories
+    globalDir: './assets/',           // For global/shared assets
+    projectRelativeDir: './pages/projects/', // Base path for project-specific assets
+    
+    // Default fallback images (global)
+    defaultImage: './assets/images/placeholder.jpg',
+    
+    // Path structure for project assets (relative to project folder)
+    projectStructure: {
+      images: 'images/',              // Project images in project_folder/images/
+      data: 'data/',                  // Project data in project_folder/data/
+      readme: 'README.md'             // Project readme in project_folder/README.md
+    },
+    
+    // Profile images
+    profileImage: './pages/about/images/profile.jpg',  // Move to about page context
+    profileImageFallback: 'https://via.placeholder.com/300x300?text=Profile+Image',
+    
+    // Directory structure for global/shared assets
+    directories: {
+      images: 'images/',
+      fonts: 'fonts/',
+      data: 'data/',
+      audio: 'audio/',
+      video: 'video/',
+    },
+    
+    // Asset resolution priority (project-first or global-first)
+    resolutionPriority: 'project-first'  // Look in project folders before global assets
   }
 };
 

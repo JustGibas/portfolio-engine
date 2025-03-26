@@ -4,12 +4,15 @@
  * This module provides utilities for managing and loading assets like images,
  * fonts, and other resources. It handles path resolution, caching, and error fallbacks.
  * 
+ * Updated to support both global assets and project-specific assets with
+ * configurable resolution priority.
+ * 
  * @module assetManager
- * @requires assetConfig from ../asset-config.js
+ * @requires config from ../config.js
  * 
  * @design Singleton pattern with a central cache and path resolution
  */
-import assetConfig from '../asset-config.js';
+import config from '../config.js';
 
 const assetManager = {
   /**
@@ -28,22 +31,22 @@ const assetManager = {
    * Configuration for asset paths
    * @type {Object}
    */
-  config: assetConfig,
+  config: config.assets,
   
   /**
    * Initialize the asset manager
-   * @param {Object} config - Optional configuration to override defaults
+   * @param {Object} customConfig - Optional configuration to override defaults
    */
-  init(config = {}) {
+  init(customConfig = {}) {
     // Override default config with provided values
-    if (config) {
-      this.config = { ...assetConfig, ...config };
+    if (customConfig) {
+      this.config = { ...config.assets, ...customConfig };
     }
     
     // Create placeholder assets
     this._createPlaceholders();
     
-    console.info('AssetManager: Initialized with base directory:', this.config.baseDir);
+    console.info('AssetManager: Initialized with modular asset structure');
     return this;
   },
   
@@ -70,37 +73,64 @@ const assetManager = {
    * Get the full path for an asset
    * @param {string} path - Relative path or name of the asset
    * @param {string} type - Type of asset (image, font, etc.)
+   * @param {string|null} projectId - Optional project ID for project-specific assets
    * @returns {string} Full path to the asset
    */
-  getAssetPath(path, type = 'images') {
+  getAssetPath(path, type = 'images', projectId = null) {
     // If path is already absolute or a data URI, return it as is
     if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
       return path;
     }
     
-    // If path already starts with base dir, return it as is
-    if (path.startsWith(this.config.baseDir)) {
+    // If path already starts with any base dir, return it as is
+    if (path.startsWith(this.config.globalDir) || path.startsWith('./pages/')) {
       return path;
     }
     
-    // If path already includes the asset type directory, append just the base
-    if (path.startsWith(this.config.directories[type])) {
-      return `${this.config.baseDir}${path}`;
+    // If project ID is provided, try to resolve from project directory first (if priority is project-first)
+    if (projectId && this.config.resolutionPriority === 'project-first') {
+      const projectPath = `${this.config.projectRelativeDir}${projectId}/${this.config.projectStructure[type] || ''}${path}`;
+      
+      // We don't check if file exists here since that would require async operations
+      // Instead, we rely on fallbacks if the file doesn't exist
+      return projectPath;
     }
     
-    // Otherwise construct the full path
-    return `${this.config.baseDir}${this.config.directories[type] || ''}${path}`;
+    // Otherwise use global asset directory
+    const globalPath = `${this.config.globalDir}${this.config.directories[type] || ''}${path}`;
+    
+    // If project ID is provided and priority is global-first, return project path as fallback
+    if (projectId && this.config.resolutionPriority !== 'project-first') {
+      return {
+        primary: globalPath,
+        fallback: `${this.config.projectRelativeDir}${projectId}/${this.config.projectStructure[type] || ''}${path}`
+      };
+    }
+    
+    return globalPath;
   },
   
   /**
    * Get an image path with a fallback
    * @param {string} imagePath - Path to the image
+   * @param {string|null} projectId - Optional project ID for project-specific images
    * @param {string} [fallbackPath] - Optional custom fallback path
    * @returns {Object} Object with src and fallback properties
    */
-  getImageWithFallback(imagePath, fallbackPath = null) {
+  getImageWithFallback(imagePath, projectId = null, fallbackPath = null) {
+    const assetPath = this.getAssetPath(imagePath, 'images', projectId);
+    
+    // If getAssetPath returned an object with primary/fallback, use those
+    if (typeof assetPath === 'object' && assetPath.primary) {
+      return {
+        src: assetPath.primary,
+        fallback: assetPath.fallback || fallbackPath || this.config.defaultImage
+      };
+    }
+    
+    // Otherwise use the path directly with default fallback
     return {
-      src: this.getAssetPath(imagePath, 'images'),
+      src: assetPath,
       fallback: fallbackPath || this.config.defaultImage
     };
   },

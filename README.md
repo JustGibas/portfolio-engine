@@ -1,87 +1,65 @@
-# PORTFOLIO ENGINE
+# Portfolio Engine
 
-A modular, component-based portfolio system built with the Entity-Component-System (ECS) architecture.
+A modular portfolio system built with Entity-Component-System (ECS) architecture.
 
 ## Project Overview
 
-- **Architecture:**  
-  The project uses the ECS pattern for maximum separation of concerns. Entities are containers for components, and systems encapsulate logic.
-  
-- **Modular CSS:**  
-  Global styles are now in `styles/base.css`, and all component-specific CSS is contained in individual files (e.g., `modules/header/header-base.css`, `pages/projects/projects.css`, etc.). This separation keeps styling maintainable and extensible.
+This project demonstrates a modern approach to building dynamic web applications:
+- Separates data (Components) from behavior (Systems)
+- Uses modular, lazy-loaded pages and components
+- Implements a theme system with CSS variables
+- Handles assets with flexible resolution priorities
 
-- **Directory Structure:**  
-  ```
-  portfolio-engine/
-  │
-  ├── engine/                # Core ECS and system files
-  │   ├── ecs.js
-  │   ├── entity.js
-  │   ├── system.js
-  │   └── css-loader.js
-  │
-  ├── modules/               # Reusable UI modules (e.g., header, footer, page)
-  │   ├── header/
-  │   │   ├── header-base/
-  │   │   │   └── header-base.js
-  │   │   └── submodules/
-  │   │       ├── navigaton/
-  │   │       │   └── navigation.js
-  │   │       └── theme-selector/
-  │   │           └── theme-selector.js
-  │   ├── footer/
-  │   │   └── footer.js
-  │   └── page/
-  │       └── page.js
-  │
-  ├── pages/                 # Content pages
-  │   ├── about/
-  │   │   ├── about.js
-  │   │   └── about.css
-  │   ├── projects/
-  │   │   ├── projects.js
-  │   │   └── projects.css
-  │   └── contact/
-  │       ├── contact.js
-  │       └── contact.css
-  │
-  ├── config.js              # Global configuration
-  ├── themes.css             # Theme definitions (moved to root)
-  ├── app.js                 # Application entry point
-  └── index.html             # Main HTML file
-  ```
+## Development Guide
 
-## Development Roadmap
+### Key Directories
 
-- **Documentation Update:**  
-  This document details the new modular structure and ECS flow. Future iterations will include more details on system lifecycles, advanced settings, and project-specific documentation.
-  
-- **Modular System Enhancements:**  
-  Continue to extract styling and logic into separate modules (for both CSS and JavaScript) for easier testing and maintenance.
-  
-- **Additional Features:**  
-  Explore improvements in lazy loading, error handling in module loading and dynamic project discoveries.
+- `/engine` - [Core ECS implementation](./engine/README.md) and systems
+- `/modules` - [Reusable UI components](./modules/README.md) 
+- `/pages` - [Content pages](./pages/README.md) and project data
 
-## How to Contribute
+### Development Workflow
 
-1. Clone the repository.
-2. Follow the updated documentation and modular approach.
-3. Raise issues or propose changes via pull requests.
+1. **Understanding the codebase**: Start with directory READMEs to understand each area's responsibilities
+2. **Adding a page**: Create a new folder under `/pages` with the page name
+3. **Creating a component**: Add to `/modules` with proper CSS isolation
+4. **System modifications**: Extend or modify systems in `/engine/systems`
 
-## File Documentation Standard
+### Key Systems
 
-All files should include a header that explains:
-1. Purpose of the file
-2. Dependencies
-3. Design patterns used
-4. Usage examples
+- **ECS Core** - `engine/ecs.js`, `engine/entity.js`, `engine/system.js`
+- **Module Loading** - `engine/systems/ModuleLoader.js`
+- **CSS Loading** - `engine/css-loader.js`
+- **Asset Management** - `engine/asset-manager.js`
+- **Event System** - `engine/systems/EventSystem.js`
 
-Example:
-```javascript
-/**
- * @fileoverview Brief description
- * @module ModuleName
- * @requires Dependencies
- * @design Design patterns used
- */
-```
+### Configuration
+
+The `config.js` file controls:
+- Site information
+- Theme settings
+- Asset resolution priorities
+- Default route
+
+## Current Development Focus
+
+### things JG plans to change
+- [ ] theme picker update
+        we want on phone to colapse to smaller footprint.
+- [ ]
+- [ ]
+- [ ]
+
+### things is development: DEV_PLAN.md
+- [ ]
+- [ ]
+- [ ]
+- [ ]
+
+### AI suggestions
+- [ ] 
+- [ ] 
+- [ ] Improving responsive design
+- [ ] Enhanced accessibility features
+
+See each directory's README.md for detailed implementation documentation.
