@@ -1,174 +1,157 @@
 /**
  * @fileoverview Projects Page
  * 
- * This module defines the projects showcase page that dynamically 
- * loads and displays project data from the projects directory.
+ * This module defines the structure and content of the Projects page,
+ * showing a collection of projects discovered by ResourceDiscoverySystem.
  * 
  * @module projects
- * @requires page from ../modules/page.js
  */
-import { page } from '../../modules/page/page.js';
-import { cssLoader } from '../../engine/css-loader.js';
+import { cssLoader } from '../../engine/utils/css-loader.js';
+import config from '../../config.js';
 
 const projects = {
+  // Content data for the projects page
+  content: {
+    title: "My Projects",
+    intro: "Here's a selection of projects I've worked on. Each project demonstrates different skills and technologies."
+  },
+  
+  // Initialize the projects page
   async init(entity) {
-    // Load page-specific CSS
-    await cssLoader.loadLocalCSS(import.meta.url);
+    this.entity = entity;
+    this.ecs = entity.ecs;
+    this.projects = [];
     
-    const container = entity.getComponent('dom').container;
-    
-    // Show loading state
-    container.innerHTML = `
-      <h2>My Projects</h2>
-      <div class="loading-projects">
-        <div class="loading-spinner"></div>
-        <p>Loading projects...</p>
-      </div>
-    `;
-    
+    // Load CSS specific to this module
     try {
-      // Load projects data dynamically
-      const projectsData = await page.getProjects();
-      
-      if (projectsData.length === 0) {
-        container.innerHTML = `
-          <h2>My Projects</h2>
-          <div class="no-projects">
-            <p>No projects found. Add project folders to the pages/projects directory.</p>
-          </div>
-        `;
-        return;
-      }
-      
-      this.render(container, projectsData);
+      await cssLoader.loadLocalCSS(import.meta.url);
+    } catch (error) {
+      console.warn('Failed to load projects page CSS:', error);
+    }
+    
+    // Get the container from the entity
+    const container = entity.getComponent('dom')?.container;
+    
+    // Load projects
+    try {
+      await this._loadProjects();
     } catch (error) {
       console.error('Failed to load projects:', error);
-      container.innerHTML = `
-        <h2>My Projects</h2>
-        <div class="error-message">
-          <p>Failed to load projects. Please try again later.</p>
-          <p>Error: ${error.message}</p>
-        </div>
-      `;
     }
+    
+    // Render if container exists
+    if (container) {
+      this.render(container);
+    }
+    
+    return this;
   },
   
-  render(container, projectsData) {
-    let projectsHtml = '';
+  // Load projects from page module or config
+  async _loadProjects() {
+    // Try to get projects from page module
+    try {
+      const pageModule = this.ecs?.getSystem('module')?.getModuleInstance('page');
+      if (pageModule) {
+        this.projects = await pageModule.instance.getProjects();
+        return;
+      }
+    } catch (error) {
+      console.warn('Failed to load projects from page module:', error);
+    }
     
-    projectsData.forEach(project => {
-      const techBadges = project.technologies && project.technologies.length > 0
-        ? project.technologies.map(tech => `<span class="tech-badge">${tech}</span>`).join('')
-        : '<span class="tech-badge">JavaScript</span>';
-      
-      projectsHtml += `
-        <div class="project-card" data-project-id="${project.id}">
-          <div class="project-image">
-            <img src="${project.image}" 
-                 alt="${project.title}" 
-                 onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
-          </div>
-          <div class="project-content">
-            <h3>${project.title}</h3>
-            <p>${project.description.substring(0, 150)}${project.description.length > 150 ? '...' : ''}</p>
-            <div class="project-tech">
-              ${techBadges}
-            </div>
-            <a href="${project.link}" class="project-link">View Project</a>
-          </div>
-        </div>
-      `;
-    });
+    // Fallback to config
+    this.projects = config.projects || [];
+  },
+  
+  // Render the projects page content
+  render(container) {
+    if (!container) return;
     
+    const content = this.content;
+    
+    // Start with page header
     container.innerHTML = `
-      <h2>My Projects</h2>
-      <div class="projects-grid">
-        ${projectsHtml}
+      <div class="projects-page">
+        <h2 class="page-title">${content.title}</h2>
+        <p class="page-intro">${content.intro}</p>
+        
+        <div class="projects-grid" id="projects-grid">
+          ${this._renderProjectCards()}
+        </div>
       </div>
     `;
     
-    // Add event listeners to project cards for potential expanded view
+    // Add click handlers to project cards
+    this._addEventListeners(container);
+  },
+  
+  // Render project cards HTML
+  _renderProjectCards() {
+    if (!this.projects || this.projects.length === 0) {
+      return '<p class="no-projects">No projects found.</p>';
+    }
+    
+    return this.projects.map(project => `
+      <div class="project-card" data-project-id="${project.id}">
+        <div class="project-image">
+          <img src="${project.image}" alt="${project.title}" onerror="this.src='assets/images/placeholder-project.jpg'">
+        </div>
+        <div class="project-info">
+          <h3>${project.title}</h3>
+          <p>${this._truncateText(project.description, 100)}</p>
+          <div class="project-technologies">
+            ${(project.technologies || []).map(tech => 
+              `<span class="tech-badge">${tech}</span>`
+            ).join('')}
+          </div>
+          <a href="${project.link}" class="project-link">View Project</a>
+        </div>
+      </div>
+    `).join('');
+  },
+  
+  // Add event listeners to project elements
+  _addEventListeners(container) {
     const projectCards = container.querySelectorAll('.project-card');
     projectCards.forEach(card => {
-      card.addEventListener('click', (e) => {
-        // Only handle clicks on the card itself, not on links
-        if (!e.target.closest('a.project-link')) {
-          const projectId = card.getAttribute('data-project-id');
-          const project = projectsData.find(p => p.id === projectId);
-          
-          if (project && project.readme) {
-            this.showProjectDetail(container, project);
-          }
-        }
+      card.addEventListener('click', (event) => {
+        // Prevent navigation if clicking on the link directly
+        if (event.target.tagName === 'A') return;
+        
+        const projectId = card.dataset.projectId;
+        this._showProjectDetails(projectId);
       });
     });
   },
   
-  showProjectDetail(container, project) {
-    // Store the current grid for going back
-    this._previousContent = container.innerHTML;
+  // Show detailed view of a project
+  _showProjectDetails(projectId) {
+    const project = this.projects.find(p => p.id === projectId);
+    if (!project) return;
     
-    container.innerHTML = `
-      <div class="project-detail">
-        <div class="project-detail-header">
-          <button class="back-button">&larr; Back to Projects</button>
-          <h2>${project.title}</h2>
-        </div>
-        
-        <div class="project-detail-content">
-          <div class="project-detail-image">
-            <img src="${project.image}" 
-                 alt="${project.title}" 
-                 onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
-          </div>
-          
-          <div class="project-detail-info">
-            <div class="project-tech">
-              ${project.technologies.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
-            </div>
-            
-            <div class="project-readme">
-              ${project.readme || project.description}
-            </div>
-            
-            <a href="${project.link}" class="project-link">View Project</a>
-          </div>
-        </div>
-      </div>
-    `;
+    // In a real implementation, this would display a modal or navigate to a detail page
+    console.info(`Showing details for project: ${project.title}`);
     
-    // Add back button handler
-    const backButton = container.querySelector('.back-button');
-    if (backButton) {
-      backButton.addEventListener('click', () => {
-        container.innerHTML = this._previousContent;
-        
-        // Re-add event listeners after restoring content
-        const projectCards = container.querySelectorAll('.project-card');
-        projectCards.forEach(card => {
-          card.addEventListener('click', (e) => {
-            if (!e.target.closest('a.project-link')) {
-              const projectId = card.getAttribute('data-project-id');
-              const project = projectsData.find(p => p.id === projectId);
-              
-              if (project && project.readme) {
-                this.showProjectDetail(container, project);
-              }
-            }
-          });
-        });
-      });
-    }
+    // Navigate to project detail page if available
+    window.location.hash = project.link;
   },
   
-  // Lifecycle methods
+  // Helper to truncate text to a specific length
+  _truncateText(text, maxLength) {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  },
+  
+  // Lifecycle methods for the page module system
   mount() {
-    console.log('Projects page mounted');
+    console.info('Projects page mounted');
   },
   
   unmount() {
-    console.log('Projects page unmounted');
-    // Clean up any event listeners if needed
+    // Clean up event listeners if needed
+    console.info('Projects page unmounted');
   }
 };
 

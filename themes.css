@@ -13,13 +13,23 @@
   --header-bg-color: #a1a1a1;
   --nav-bg-color: #8d8d8d;
   --footer-bg-color: #a1a1a1;
+
+  /* Dropdown variables */
+  --header-dropdown-bg-color: #ffffff;
+  --header-dropdown-text-color: #333333;
+  --header-dropdown-border-color: rgba(0, 0, 0, 0.1);
+  --header-dropdown-border-radius: 8px;
+  --header-dropdown-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --header-dropdown-item-hover-bg: rgba(124, 124, 124, 0.5);
+  --header-dropdown-item-active-bg: rgba(0, 0, 0, 0.1);
+  --header-dropdown-animation-duration: 150ms;
 }
 
 /* Dark theme */
 [data-theme="dark"] {
   --primary-color: #1abc9c;
-  --secondary-color: #cc3f2f;
-  --accent-color: #ecab42;
+  --secondary-color: #e7d25b;
+  --accent-color: #f0a84b;
   --background-color: #222222;
   --card-bg-color: #333333;
   --text-color: #f4f4f4;
@@ -29,6 +39,14 @@
   --header-bg-color: #1a1a1a;
   --nav-bg-color: #2a2a2a;
   --footer-bg-color: #1a1a1a;
+
+  /* Dropdown variables */
+  --header-dropdown-bg-color: #333333;
+  --header-dropdown-text-color: #f4f4f4;
+  --header-dropdown-border-color: rgba(255, 255, 255, 0.1);
+  --header-dropdown-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --header-dropdown-item-hover-bg: rgba(124, 124, 124, 0.5);
+  --header-dropdown-item-active-bg: rgba(255, 255, 255, 0.1);
 }
 
 /* Neon theme */
@@ -45,6 +63,16 @@
   --header-bg-color: #080818;
   --nav-bg-color: #121225;
   --footer-bg-color: #080818;
+
+  /* Dropdown variables */
+  --header-dropdown-bg-color: #1a1a2e;
+  --header-dropdown-text-color: #ffffff;
+  --header-dropdown-border-color: rgba(0, 255, 255, 0.2);
+  --header-dropdown-border-radius: 8px;
+  --header-dropdown-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --header-dropdown-item-hover-bg: rgba(124, 124, 124, 0.5);
+  --header-dropdown-item-active-bg: rgba(0, 0, 0, 0.1);
+  --header-dropdown-animation-duration: 150ms;
 }
 
 /* Apply theme variables */

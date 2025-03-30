@@ -1,147 +1,166 @@
-asset-manager.js:49 AssetManager: Initialized with modular asset structure
-ResourceDiscoverySystem.js:46 ResourceDiscoverySystem: Initialized
-ModuleLifecycleSystem.js:32 ModuleLifecycleSystem: Initialized
-asset-manager.js:49 AssetManager: Initialized with modular asset structure
-app.js:37 Portfolio Engine: Starting initialization...
-EventSystem.js:30 Event System: Initialized
-EventSystem.js:36 Event System: Core event listeners registered
-ResourceDiscoverySystem.js:58 ResourceDiscoverySystem: Starting page discovery
-ResourceDiscoverySystem.js:110 ResourceDiscoverySystem: Found page module: about
-ResourceDiscoverySystem.js:110 ResourceDiscoverySystem: Found page module: contact
-ResourceDiscoverySystem.js:110 ResourceDiscoverySystem: Found page module: projects
-ResourceDiscoverySystem.js:62 ResourceDiscoverySystem: Found 3 pages
-ResourceDiscoverySystem.js:78 ResourceDiscoverySystem: Starting project discovery
-app.js:66 Configuration: 3 sections, 3 themes
-EntityCreator.js:42 EntityCreator: Creating entities from configuration
-EntityCreator.js:54 EntityCreator: Creating header entity
-EntityCreator.js:73 EntityCreator: Creating 3 section entities
-EntityCreator.js:101 EntityCreator: Creating footer entity
-EntityCreator.js:46 EntityCreator: All entities created successfully
-ModuleLoader.js:45 ModuleLoader: Initializing with initial route about
-ModuleLoader.js:62 ModuleLoader: Handling route change to "about"
-ModuleLoader.js:99 ModuleLoader: Loading module "about" (looking in pages/about/about.js)
-ModuleLifecycleSystem.js:65 ModuleLifecycleSystem: Trying to load module from: ../../pages/about/about.js
-app.js:82 Portfolio Engine: Starting ECS system...
-LayoutInitializerSystem.js:45 LayoutInitializer: Starting layout component initialization
-LayoutInitializerSystem.js:52 LayoutInitializer: Found header entity, initializing
-LayoutInitializerSystem.js:73 LayoutInitializer: Header initialized
-LayoutInitializerSystem.js:52 LayoutInitializer: Found footer entity, initializing
-LayoutInitializerSystem.js:85 LayoutInitializer: Footer initialized
-LayoutInitializerSystem.js:63 LayoutInitializer: Layout initialization complete
-app.js:88 Portfolio Engine: Initialization complete
-placeholder.jpg:1 
-            
-            
-           GET http://127.0.0.1:5502/assets/images/placeholder.jpg 404 (Not Found)
-Image
-_createPlaceholders @ asset-manager.js:60
-init @ asset-manager.js:47
-(anonymous) @ asset-manager.js:249
-ModuleLifecycleSystem.js:67 ModuleLifecycleSystem: Successfully loaded module from ../../pages/about/about.js
-ModuleLifecycleSystem.js:92 ModuleLifecycleSystem: Module 'about' processing complete
-about.js:83 About page mounted
-ModuleLoader.js:111 ModuleLoader: Successfully loaded module "about"
-ResourceDiscoverySystem.js:187 ResourceDiscoverySystem: Loaded project config from ../../pages/projects/Portfolio_Engine/project.js
-ResourceDiscoverySystem.js:134 ResourceDiscoverySystem: Found project: Portfolio Engine
-ResourceDiscoverySystem.js:182 
-            
-            
-           GET http://127.0.0.1:5502/pages/projects/Data_Visualization/project.js net::ERR_ABORTED 404 (Not Found)
-_loadProjectData @ ResourceDiscoverySystem.js:182
-_performProjectDiscovery @ ResourceDiscoverySystem.js:131
-discoverProjects @ ResourceDiscoverySystem.js:80
-discoverProjects @ page.js:53
-initApp @ app.js:61
-await in initApp
-(anonymous) @ app.js:95
-ResourceDiscoverySystem.js:201 ResourceDiscoverySystem: No project.js found for Data_Visualization, using defaults
+app.js:20 Portfolio Engine: Starting initialization...
+start.js:34 Engine: Starting bootstrap process...
+ErrorSystem.js:37 ErrorSystem: Initialized
+start.js:67 Engine: Initialized and registered error system
+EventSystem.js:29 EventSystem: Initialized
+start.js:67 Engine: Initialized and registered event system
+ComponentRegistrySystem.js:38 ComponentRegistrySystem: Initialized
+start.js:67 Engine: Initialized and registered componentRegistry system
+LayoutSystem.js:38 LayoutSystem: Initialized
+start.js:67 Engine: Initialized and registered layout system
+ModuleSystem.js:48 ModuleSystem: Initialized
+start.js:67 Engine: Initialized and registered module system
+ResourceDiscoverySystem.js:79 ResourceDiscoverySystem: Using 5 pages from config
+ResourceDiscoverySystem.js:84 ResourceDiscoverySystem: Using 2 projects from config
+ResourceDiscoverySystem.js:154 ResourceDiscoverySystem: Loading page metadata
+ResourceDiscoverySystem.js:135 ResourceDiscoverySystem: Initialized
+start.js:67 Engine: Initialized and registered resourceDiscovery system
+start.js:73 Engine: Core systems initialized
+ModuleSystem.js:79 ModuleSystem: Registered module "analytics"
+ModuleSystem.js:107 ModuleSystem: Registered module "analytics" directly
+css-loader.js:37 CSS Loader: Loaded http://127.0.0.1:5502/modules/page/page.css
+page.js:40 Page content manager initialized
+page.js:316 Loading initial page...
+page.js:325 Initial route: about
+page.js:372 Page: Falling back to direct DOM selection for route "about".
+page.js:302 Page: Handling route change to "about".
+page.js:372 Page: Falling back to direct DOM selection for route "about".
+page.js:273 Loading page module: about
+ModuleSystem.js:79 ModuleSystem: Registered module "about"
+ModuleSystem.js:187 Loading module from: ../../pages/about/about.js
+ResourceDiscoverySystem.js:281 ResourceDiscoverySystem: Starting project discovery
+app.js:94 Configuration loaded with 5 sections
+EntityCreator.js:31 EntityCreator: Created all standard entities
+app.js:106 Setting initial route to: about
+app.js:140 Portfolio Engine: Starting engine loop...
+loop.js:150 EngineLoop: Started at target 60 FPS
+app.js:149 Portfolio Engine: Debug mode enabled - core objects exposed to window
+app.js:152 Portfolio Engine: Initialization complete
+register-tests.js:16 Registering tests...
+register-tests.js:20 Using test configuration with autoRunTests: false
+LayoutSystem.js:79 LayoutSystem: Found existing header entity
+LayoutSystem.js:187 LayoutSystem: Found 1 header entities
+LayoutSystem.js:329 LayoutSystem: Creating header DOM container
+header.js:69 Header: No valid sections array in configuration, using default
 overrideMethod @ hook.js:608
-_loadProjectData @ ResourceDiscoverySystem.js:201
-await in _loadProjectData
-_performProjectDiscovery @ ResourceDiscoverySystem.js:131
-discoverProjects @ ResourceDiscoverySystem.js:80
-discoverProjects @ page.js:53
-initApp @ app.js:61
+Header @ header.js:69
+_initializeHeader @ LayoutSystem.js:341
+_tryInitializeFromEntities @ LayoutSystem.js:192
+update @ LayoutSystem.js:50
+_update @ loop.js:245
+requestAnimationFrame
+start @ loop.js:141
+initApp @ app.js:141
 await in initApp
-(anonymous) @ app.js:95
-ResourceDiscoverySystem.js:182 
+(anonymous) @ app.js:169
+LayoutSystem.js:390 LayoutSystem: Creating footer DOM container
+ModuleSystem.js:187 Loading module from: ../../pages/about/about.js
+ResourceDiscoverySystem.js:506 
             
             
-           GET http://127.0.0.1:5502/pages/projects/AI_Chatbot/project.js net::ERR_ABORTED 404 (Not Found)
-_loadProjectData @ ResourceDiscoverySystem.js:182
-_performProjectDiscovery @ ResourceDiscoverySystem.js:131
-discoverProjects @ ResourceDiscoverySystem.js:80
-discoverProjects @ page.js:53
-initApp @ app.js:61
+           HEAD http://127.0.0.1:5502/pages/projects/MyFistWebsite/ net::ERR_ABORTED 404 (Not Found)
+_checkDirectoryExists @ ResourceDiscoverySystem.js:506
+_loadProjectData @ ResourceDiscoverySystem.js:433
+_performProjectDiscovery @ ResourceDiscoverySystem.js:359
+discoverProjects @ ResourceDiscoverySystem.js:283
+discoverProjects @ page.js:203
+initApp @ app.js:90
 await in initApp
-(anonymous) @ app.js:95
-ResourceDiscoverySystem.js:201 ResourceDiscoverySystem: No project.js found for AI_Chatbot, using defaults
+(anonymous) @ app.js:169
+ResourceDiscoverySystem.js:508 Directory check failed for ../../pages/projects/MyFistWebsite/: 404
 overrideMethod @ hook.js:608
-_loadProjectData @ ResourceDiscoverySystem.js:201
-await in _loadProjectData
-_performProjectDiscovery @ ResourceDiscoverySystem.js:131
-discoverProjects @ ResourceDiscoverySystem.js:80
-discoverProjects @ page.js:53
-initApp @ app.js:61
+_checkDirectoryExists @ ResourceDiscoverySystem.js:508
+await in _checkDirectoryExists
+_loadProjectData @ ResourceDiscoverySystem.js:433
+_performProjectDiscovery @ ResourceDiscoverySystem.js:359
+discoverProjects @ ResourceDiscoverySystem.js:283
+discoverProjects @ page.js:203
+initApp @ app.js:90
 await in initApp
-(anonymous) @ app.js:95
-css-loader.js:56 CSS Loader: Loaded http://127.0.0.1:5502/modules/footer/footer.css
-css-loader.js:56 CSS Loader: Loaded http://127.0.0.1:5502/modules/header/header-base/header-base.css
-header-base.js:61 Header base initialized with navigation and theme selector submodules
-css-loader.js:56 CSS Loader: Loaded ../../pages/about/about.css
-css-loader.js:56 CSS Loader: Loaded http://127.0.0.1:5502/pages/about/about.css
-ResourceDiscoverySystem.js:208 
+(anonymous) @ app.js:169
+ResourceDiscoverySystem.js:435 ResourceDiscoverySystem: Project directory MyFistWebsite doesn't exist, using default data
+ResourceDiscoverySystem.js:362 ResourceDiscoverySystem: Found project: MyFistWebsite
+ResourceDiscoverySystem.js:506 
             
             
-           GET http://127.0.0.1:5502/pages/projects/Data_Visualization/README.md 404 (Not Found)
-_loadProjectData @ ResourceDiscoverySystem.js:208
-await in _loadProjectData
-_performProjectDiscovery @ ResourceDiscoverySystem.js:131
-discoverProjects @ ResourceDiscoverySystem.js:80
-discoverProjects @ page.js:53
-initApp @ app.js:61
+           HEAD http://127.0.0.1:5502/pages/projects/Portfolio_Engine_Deepdive/ net::ERR_ABORTED 404 (Not Found)
+_checkDirectoryExists @ ResourceDiscoverySystem.js:506
+_loadProjectData @ ResourceDiscoverySystem.js:433
+_performProjectDiscovery @ ResourceDiscoverySystem.js:359
+discoverProjects @ ResourceDiscoverySystem.js:283
+discoverProjects @ page.js:203
+initApp @ app.js:90
 await in initApp
-(anonymous) @ app.js:95
-ResourceDiscoverySystem.js:134 ResourceDiscoverySystem: Found project: Data Visualization
-ResourceDiscoverySystem.js:208 
-            
-            
-           GET http://127.0.0.1:5502/pages/projects/AI_Chatbot/README.md 404 (Not Found)
-_loadProjectData @ ResourceDiscoverySystem.js:208
-await in _loadProjectData
-_performProjectDiscovery @ ResourceDiscoverySystem.js:131
-discoverProjects @ ResourceDiscoverySystem.js:80
-discoverProjects @ page.js:53
-initApp @ app.js:61
+(anonymous) @ app.js:169
+ResourceDiscoverySystem.js:508 Directory check failed for ../../pages/projects/Portfolio_Engine_Deepdive/: 404
+overrideMethod @ hook.js:608
+_checkDirectoryExists @ ResourceDiscoverySystem.js:508
+await in _checkDirectoryExists
+_loadProjectData @ ResourceDiscoverySystem.js:433
+_performProjectDiscovery @ ResourceDiscoverySystem.js:359
+discoverProjects @ ResourceDiscoverySystem.js:283
+discoverProjects @ page.js:203
+initApp @ app.js:90
 await in initApp
-(anonymous) @ app.js:95
-ResourceDiscoverySystem.js:134 ResourceDiscoverySystem: Found project: AI Chatbot
-ResourceDiscoverySystem.js:82 ResourceDiscoverySystem: Found 3 projects
-css-loader.js:56 CSS Loader: Loaded http://127.0.0.1:5502/modules/header/submodules/navigaton/navigation.css
-navigation.js:81 Navigation module initialized with 3 navigation items
-css-loader.js:56 CSS Loader: Loaded http://127.0.0.1:5502/modules/header/submodules/theme-selector/theme-selector.css
-theme-selector.js:73 Theme selector initialized with 3 theme options
-profile.jpg:1 
+(anonymous) @ app.js:169
+ResourceDiscoverySystem.js:435 ResourceDiscoverySystem: Project directory Portfolio_Engine_Deepdive doesn't exist, using default data
+ResourceDiscoverySystem.js:362 ResourceDiscoverySystem: Found project: Portfolio Engine Deepdive
+ResourceDiscoverySystem.js:286 ResourceDiscoverySystem: Found 2 projects
+ModuleSystem.js:107 ModuleSystem: Registered module "about" directly
+ModuleSystem.js:107 ModuleSystem: Registered module "about" directly
+TestSystem.js:50 TestSystem: Initialized
+register-tests.js:30 TestSystem created and registered with the world
+css-loader.js:37 CSS Loader: Loaded http://127.0.0.1:5502/modules/header/header.css
+header.js:131 Header initialized with configured modules
+css-loader.js:37 CSS Loader: Loaded http://127.0.0.1:5502/modules/footer/footer.css
+css-loader.js:37 CSS Loader: Loaded http://127.0.0.1:5502/pages/about/about.css
+about.js:50 Fallback: Using container from DOM for about page.
+TestSystem.js:204 
             
             
-           GET http://127.0.0.1:5502/assets/images/profile.jpg 404 (Not Found)
-Image
-render @ about.js:61
-init @ about.js:40
-await in init
-init @ ModuleLifecycleSystem.js:162
-switchToModule @ ModuleLifecycleSystem.js:308
-await in switchToModule
-switchTo @ page.js:103
-loadModule @ ModuleLoader.js:110
-handleRouteChange @ ModuleLoader.js:90
-init @ ModuleLoader.js:54
-initApp @ app.js:79
-await in initApp
-(anonymous) @ app.js:95
-via.placeholder.com/300x300?text=Profile+Image:1 
+           GET http://127.0.0.1:5502/modules/dev-tools/index.js net::ERR_ABORTED 404 (Not Found)
+_connectToDevTools @ TestSystem.js:204
+init @ TestSystem.js:44
+registerAllTests @ register-tests.js:28
+await in registerAllTests
+(anonymous) @ app.js:55
+Promise.then
+initApp @ app.js:55
+(anonymous) @ app.js:169
+register-tests.js:38 
             
             
-           GET https://via.placeholder.com/300x300?text=Profile+Image net::ERR_NAME_NOT_RESOLVED
-Image
-onerror @ VM2426 :1
+           GET http://127.0.0.1:5502/modules/theme-selector/theme-selector.test.js net::ERR_ABORTED 404 (Not Found)
+registerAllTests @ register-tests.js:38
+await in registerAllTests
+(anonymous) @ app.js:55
+Promise.then
+initApp @ app.js:55
+(anonymous) @ app.js:169
+TestSystem.js:208 TestSystem: Could not import DevTools: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5502/modules/dev-tools/index.js
+overrideMethod @ hook.js:608
+_connectToDevTools @ TestSystem.js:208
+await in _connectToDevTools
+init @ TestSystem.js:44
+registerAllTests @ register-tests.js:28
+await in registerAllTests
+(anonymous) @ app.js:55
+Promise.then
+initApp @ app.js:55
+(anonymous) @ app.js:169
+register-tests.js:43 Failed to load test module ThemeSelector: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5502/modules/theme-selector/theme-selector.test.js
+overrideMethod @ hook.js:608
+registerAllTests @ register-tests.js:43
+await in registerAllTests
+(anonymous) @ app.js:55
+Promise.then
+initApp @ app.js:55
+(anonymous) @ app.js:169
+register-tests.js:52 Automatic test execution disabled. Use DevTools to run tests.
+css-loader.js:37 CSS Loader: Loaded http://127.0.0.1:5502/modules/navbar/navbar.css
+navbar.js:47 Navbar CSS loaded successfully
+css-loader.js:37 CSS Loader: Loaded http://127.0.0.1:5502/modules/theme-selector/theme-selector.css
+css-loader.js:37 CSS Loader: Loaded http://127.0.0.1:5502/modules/theme-selector/theme-selector.css
+css-loader.js:37 CSS Loader: Loaded http://127.0.0.1:5502/modules/dropdown/dropdown.css
+dropdown.js:49 Dropdown CSS loaded successfully
+page.js:76 Page: Starting deferred resource discovery

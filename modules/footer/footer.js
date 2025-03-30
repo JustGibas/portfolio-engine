@@ -3,7 +3,7 @@
  * Renders the footer content for the portfolio.
  * @module footer
  */
-import { cssLoader } from '../../engine/css-loader.js';
+import { cssLoader } from '../../engine/utils/css-loader.js';
 import config from '../../config.js';
 
 class Footer {

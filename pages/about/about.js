@@ -6,18 +6,18 @@
  * across the application.
  * 
  * @module about
- * @requires config from ../config.js
+ * @requires config from ../../config.js
  */
 import config from '../../config.js';
-import { cssLoader } from '../../engine/css-loader.js';
+import { cssLoader } from '../../engine/utils/css-loader.js';
 
 // Page module implementation
 const about = {
   // Content data populated from config
   content: {
     title: "About Me",
-    profileImage: "assets/images/profile.jpg",
-    fallbackImage: "https://via.placeholder.com/300x300?text=Profile+Image",
+    profileImage: config.assets?.userImages?.profile?.path || "assets/images/profile.png",
+    fallbackImage: config.assets?.userImages?.profile?.fallback || "https://via.placeholder.com/300x300.png?text=No+Image",
     paragraphs: [
       "Welcome to my portfolio. I am a creative technologist with a passion for developing innovative solutions and pushing the boundaries of technology.",
       "With extensive experience in web development, interactive media, and software engineering, I specialize in creating engaging digital experiences that combine cutting-edge technology with intuitive design.",
@@ -25,53 +25,64 @@ const about = {
     ],
     // Use site information from config
     details: {
-      name: config.site.author,
-      location: config.site.location || "Location not specified",
-      email: config.site.email || "Email not specified"
+      name: config.site?.author || "Portfolio Author",
+      location: config.site?.location || "Location not specified",
+      email: config.site?.email || "Email not specified"
     }
   },
   
   // Initialize the about page
   async init(entity) {
-    // Load page-specific CSS using the new method
-    await cssLoader.loadLocalCSS(import.meta.url);
+    this.entity = entity;
+    this.ecs = entity.ecs;
     
-    const container = entity.getComponent('dom').container;
-    this.render(container);
+    // Load CSS specific to this module
+    try {
+      await cssLoader.loadLocalCSS(import.meta.url);
+    } catch (error) {
+      console.warn('Failed to load about page CSS:', error);
+    }
+    
+    // Get container from entity or use DOM fallback
+    let container = entity.getComponent('dom')?.container;
+    if (!container) {
+      container = document.querySelector('#about .section-container');
+      console.info('Fallback: Using container from DOM for about page.');
+    }
+    
+    if (container) {
+      this.render(container);
+    } else {
+      console.error('About page container not found.');
+    }
+    
+    return this;
   },
   
   // Render the about page content
   render(container) {
-    // Generate paragraphs HTML
-    const paragraphsHtml = this.content.paragraphs
-      .map(paragraph => `<p>${paragraph}</p>`)
-      .join('');
+    if (!container) return;
     
-    // Generate details HTML
-    const detailsHtml = Object.entries(this.content.details)
-      .map(([key, value]) => `
-        <div class="detail-item">
-          <span class="detail-label">${key.charAt(0).toUpperCase() + key.slice(1)}:</span>
-          <span class="detail-value">${value}</span>
-        </div>
-      `)
-      .join('');
+    const content = this.content;
     
-    // Render complete page
     container.innerHTML = `
-      <div class="about-container">
-        <h2>${this.content.title}</h2>
+      <div class="about-page">
+        <h2 class="page-title">${content.title}</h2>
+        
         <div class="about-content">
-          <div class="about-image">
-            <img src="${this.content.profileImage}" 
-                 alt="Profile Image" 
-                 onerror="this.onerror=null; this.src='${this.content.fallbackImage || config.site.socialProfileImage}'">
-          </div>
-          <div class="about-text">
-            ${paragraphsHtml}
-            <div class="about-details">
-              ${detailsHtml}
+          <div class="profile-section">
+            <img src="${content.profileImage}" alt="${content.details.name}" 
+                 class="profile-image" onerror="this.src='${content.fallbackImage}'">
+            
+            <div class="profile-details">
+              <h3>${content.details.name}</h3>
+              <p><i class="fas fa-map-marker-alt"></i> ${content.details.location}</p>
+              <p><i class="fas fa-envelope"></i> ${content.details.email}</p>
             </div>
+          </div>
+          
+          <div class="about-text">
+            ${content.paragraphs.map(paragraph => `<p>${paragraph}</p>`).join('')}
           </div>
         </div>
       </div>
@@ -80,11 +91,11 @@ const about = {
   
   // Lifecycle methods for the page module system
   mount() {
-    console.log('About page mounted');
+    console.info('About page mounted');
   },
   
   unmount() {
-    console.log('About page unmounted');
+    console.info('About page unmounted');
   }
 };
 

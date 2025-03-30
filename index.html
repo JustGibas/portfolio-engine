@@ -6,39 +6,53 @@
     <meta name="description" content="A dynamic portfolio built with ECS architecture">
     <meta name="author" content="Justinas Gibas">
     <title>Portfolio Engine</title>
-    <!-- Base CSS file for styling -->
-    <link rel="stylesheet" href="base.css">
-    <!-- Themes CSS contains variables for theme switching -->
-    <link rel="stylesheet" href="themes.css">
-    <!-- Inline SVG favicon for quick loading -->
+    <!-- Global CSS files -->
+    <link rel="stylesheet" href="base.css">     <!-- Base styling and layout -->
+    <link rel="stylesheet" href="themes.css">   <!-- Theme variables and theme-specific styles -->
+    <!-- Inline SVG favicon for performance -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='32' height='32'><text x='50' y='65' font-family='Arial, sans-serif' font-size='45' font-weight='bold' text-anchor='middle'>JG</text></svg>">
+    <!-- Import map for module resolution -->
+    <script type="importmap">
+    {
+      "imports": {
+        "config": "/config.js",
+        "engine/": "/engine/",
+        "modules/": "/modules/",
+        "pages/": "/pages/"
+      }
+    }
+    </script>
 </head>
 <body>
-    <!-- Root container that the ECS will target for initial DOM creation -->
+    <!-- Root application container -->
     <div id="root">
         <!-- 
             HEADER SECTION
-            - Contains navigation and theme selector
-            - Initialized by headerBase module
-            - Referenced by a header entity in ECS
+            - Contains site branding, navigation menu, and theme controls
+            - Initialized by the headerBase module via LayoutInitializerSystem
+            - Contains dropdown menu with theme selector and developer tools
+            - Responsive design adapts to different screen sizes
         -->
         <header id="header" class="header" data-component="header">
             <div class="header-content">
-                <!-- Header content will be dynamically populated by the header module -->
+                <!-- Header content is dynamically populated by the header module -->
             </div>
         </header>
 
         <!-- 
             MAIN CONTENT AREA
-            - Contains all portfolio sections defined in config.js
-            - Each section becomes an entity in the ECS
+            - Contains all dynamically loaded page sections
+            - Each section corresponds to a route in the application
+            - Sections are initialized with entities in the ECS architecture
+            - Only one section is visible at a time, controlled by the routing system
         -->
         <main id="main">
             <!-- 
                 ABOUT SECTION
-                - First section, shown by default
+                - Personal information and introduction
                 - Content loaded from about.js module 
-                - The data-route attribute is used by the RoutingSystem
+                - The data-route attribute is used by the routing system for navigation
+                - Images are handled with fallbacks for better reliability
             -->
             <section id="about" class="section" data-route="about" data-component="section">
                 <div class="section-container">
@@ -48,9 +62,11 @@
 
             <!-- 
                 PROJECTS SECTION
-                - Showcases portfolio projects
+                - Portfolio project showcase with dynamic grid layout
                 - Content loaded from projects.js module
-                - Project cards are generated from project data in config or loaded dynamically
+                - Projects are discovered automatically from the projects directory
+                - Each project card can expand to show detailed information
+                - Includes technologies, descriptions and links to live projects
             -->
             <section id="projects" class="section" data-route="projects" data-component="section">
                 <div class="section-container">
@@ -60,9 +76,10 @@
 
             <!-- 
                 CONTACT SECTION
-                - Contains contact form
+                - Interactive contact form with validation
                 - Content loaded from contact.js module
-                - Form handling is managed by the contact module
+                - Form handling is managed by the contact module's event listeners
+                - Form submission is processed asynchronously
             -->
             <section id="contact" class="section" data-route="contact" data-component="section">
                 <div class="section-container">
@@ -75,19 +92,22 @@
 
         <!-- 
             FOOTER SECTION
-            - Contains footer information
-            - Initialized by footer module
-            - Referenced by a footer entity in ECS
+            - Contains copyright information and site metadata
+            - Initialized by the footer module
+            - Content is generated dynamically including current year
+            - Referenced by a footer entity in the ECS architecture
         -->
         <footer id="footer" data-component="footer">
-            <!-- Footer content will be dynamically populated by the footer module -->
+            <!-- Footer content is dynamically populated by the footer module -->
         </footer>
 
         <!-- 
             LOADING INDICATOR
-            - Shows when content is loading
-            - Controlled by ContentSystem
-            - Visibility toggled based on loading state
+            - Global loading state indicator
+            - Displays during asynchronous operations
+            - Controlled by content loading systems
+            - Uses CSS animations for visual feedback
+            - Automatically hidden when content is ready
         -->
         <div id="loading-indicator" class="loading-indicator hidden">
             <div class="spinner"></div>
@@ -97,30 +117,33 @@
 
     <!-- 
         APPLICATION INITIALIZATION
-        - Starts the ECS architecture
-        - Creates entities for each section
-        - Initializes modules for each entity
-        - Links DOM elements to entities via components
+        - Initializes the ECS architecture
+        - Loads configuration and systems
+        - Creates entities for each UI component
+        - Handles routing based on URL hash
+        - Sets up event listeners for user interaction
     -->
     <script type="module" src="app.js"></script>
 
     <!-- 
-        HOW THIS HTML WORKS WITH ECS:
+        ARCHITECTURE OVERVIEW:
         
-        1. The app.js file creates the ECS instance
-        2. DOM elements are selected and attached to entities as components
-        3. Each section gets an entity with:
-           - dom component (reference to section element)
-           - route component (for navigation)
-           - module component (which module to load)
-        4. Systems operate on these entities to:
-           - Handle route changes
-           - Apply themes
-           - Load content modules
-           - Manage visibility
+        1. The app.js file creates the ECS instance and initializes systems
+        2. DOM elements are connected to entities through components:
+           - Each HTML section corresponds to an entity
+           - Components store references to DOM elements and module metadata
+           - The data-component and data-route attributes help systems identify elements
+        3. Systems operate on entities to:
+           - Handle navigation and routing
+           - Apply themes across the application
+           - Load content modules dynamically
+           - Manage UI state and visibility
         
-        This structure ensures the HTML remains stable while modules can
-        dynamically modify their designated sections without affecting others.
+        This architecture provides:
+        - Clear separation between UI structure and business logic
+        - Dynamic content loading for better performance
+        - Modular components that can be developed independently
+        - Maintainable code organization with specific responsibilities
     -->
 </body>
 </html>
