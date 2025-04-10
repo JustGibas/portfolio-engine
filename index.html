@@ -15,9 +15,7 @@
     <script type="importmap">
     {
       "imports": {
-        "config": "/config.js",
         "engine/": "/engine/",
-        "modules/": "/modules/",
         "pages/": "/pages/"
       }
     }
@@ -25,125 +23,8 @@
 </head>
 <body>
     <!-- Root application container -->
-    <div id="root">
-        <!-- 
-            HEADER SECTION
-            - Contains site branding, navigation menu, and theme controls
-            - Initialized by the headerBase module via LayoutInitializerSystem
-            - Contains dropdown menu with theme selector and developer tools
-            - Responsive design adapts to different screen sizes
-        -->
-        <header id="header" class="header" data-component="header">
-            <div class="header-content">
-                <!-- Header content is dynamically populated by the header module -->
-            </div>
-        </header>
-
-        <!-- 
-            MAIN CONTENT AREA
-            - Contains all dynamically loaded page sections
-            - Each section corresponds to a route in the application
-            - Sections are initialized with entities in the ECS architecture
-            - Only one section is visible at a time, controlled by the routing system
-        -->
-        <main id="main">
-            <!-- 
-                ABOUT SECTION
-                - Personal information and introduction
-                - Content loaded from about.js module 
-                - The data-route attribute is used by the routing system for navigation
-                - Images are handled with fallbacks for better reliability
-            -->
-            <section id="about" class="section" data-route="about" data-component="section">
-                <div class="section-container">
-                    <!-- About content dynamically loaded by the about module -->
-                </div>
-            </section>
-
-            <!-- 
-                PROJECTS SECTION
-                - Portfolio project showcase with dynamic grid layout
-                - Content loaded from projects.js module
-                - Projects are discovered automatically from the projects directory
-                - Each project card can expand to show detailed information
-                - Includes technologies, descriptions and links to live projects
-            -->
-            <section id="projects" class="section" data-route="projects" data-component="section">
-                <div class="section-container">
-                    <!-- Projects content dynamically loaded by the projects module -->
-                </div>
-            </section>
-
-            <!-- 
-                CONTACT SECTION
-                - Interactive contact form with validation
-                - Content loaded from contact.js module
-                - Form handling is managed by the contact module's event listeners
-                - Form submission is processed asynchronously
-            -->
-            <section id="contact" class="section" data-route="contact" data-component="section">
-                <div class="section-container">
-                    <!-- Contact content dynamically loaded by the contact module -->
-                </div>
-            </section>
-
-            <!-- Additional section placeholders can be added here based on config -->
-        </main>
-
-        <!-- 
-            FOOTER SECTION
-            - Contains copyright information and site metadata
-            - Initialized by the footer module
-            - Content is generated dynamically including current year
-            - Referenced by a footer entity in the ECS architecture
-        -->
-        <footer id="footer" data-component="footer">
-            <!-- Footer content is dynamically populated by the footer module -->
-        </footer>
-
-        <!-- 
-            LOADING INDICATOR
-            - Global loading state indicator
-            - Displays during asynchronous operations
-            - Controlled by content loading systems
-            - Uses CSS animations for visual feedback
-            - Automatically hidden when content is ready
-        -->
-        <div id="loading-indicator" class="loading-indicator hidden">
-            <div class="spinner"></div>
-            <p>Loading...</p>
-        </div>
-    </div>
-
-    <!-- 
-        APPLICATION INITIALIZATION
-        - Initializes the ECS architecture
-        - Loads configuration and systems
-        - Creates entities for each UI component
-        - Handles routing based on URL hash
-        - Sets up event listeners for user interaction
-    -->
+    <div id="root"></div>
     <script type="module" src="app.js"></script>
 
-    <!-- 
-        ARCHITECTURE OVERVIEW:
-        
-        1. The app.js file creates the ECS instance and initializes systems
-        2. DOM elements are connected to entities through components:
-           - Each HTML section corresponds to an entity
-           - Components store references to DOM elements and module metadata
-           - The data-component and data-route attributes help systems identify elements
-        3. Systems operate on entities to:
-           - Handle navigation and routing
-           - Apply themes across the application
-           - Load content modules dynamically
-           - Manage UI state and visibility
-        
-        This architecture provides:
-        - Clear separation between UI structure and business logic
-        - Dynamic content loading for better performance
-        - Modular components that can be developed independently
-        - Maintainable code organization with specific responsibilities
-    -->
 </body>
 </html>

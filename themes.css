@@ -1,4 +1,6 @@
-/* Theme definitions and variables */
+/* Theme definitions and variables 
+==================================================================================
+*/
 
 :root {
   --primary-color: #3498db;
@@ -25,7 +27,9 @@
   --header-dropdown-animation-duration: 150ms;
 }
 
-/* Dark theme */
+/* Dark theme 
+===================================================================================
+*/
 [data-theme="dark"] {
   --primary-color: #1abc9c;
   --secondary-color: #e7d25b;
@@ -49,7 +53,9 @@
   --header-dropdown-item-active-bg: rgba(255, 255, 255, 0.1);
 }
 
-/* Neon theme */
+/* Neon theme 
+===================================================================================
+*/
 [data-theme="neon"] {
   --primary-color: #00ff99;
   --secondary-color: #ff00ff;
@@ -75,7 +81,9 @@
   --header-dropdown-animation-duration: 150ms;
 }
 
-/* Apply theme variables */
+/* Apply theme variables 
+===================================================================================
+*/
 body {
   background-color: var(--background-color);
   color: var(--text-color);

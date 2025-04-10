@@ -1,141 +1,74 @@
 /**
  * @fileoverview Event System for ECS
  * 
- * Handles events through ECS components and entities
+ * This system handles the processing of events in our ECS architecture.
+ * It treats events as entities with components, following pure ECS principles.
  */
 import { System } from '../core/system.js';
-
-// Component Types
-const EVENT_EMITTER = 'eventEmitter';
-const EVENT_LISTENER = 'eventListener';
-const EVENT = 'event';
-const EVENT_NOTIFICATION = 'eventNotification';
+import { 
+  EVENT, 
+  EVENT_LISTENER, 
+  EVENT_EMITTER, 
+  EVENT_NOTIFICATION,
+  createEventComponent
+} from '../components/event.js';
 
 /**
  * Event System - Manages event creation and dispatch
  */
 class EventSystem extends System {
-  init() {
-    this.listenerCache = new Map(); // eventType -> entityIds[]
-    this.pendingEvents = [];
+  /**
+   * Initialize the event system
+   * @param {Object} world - ECS world instance
+   * @param {Object} options - System options
+   * @returns {EventSystem} This system instance
+   */
+  init(world, options = {}) {
+    super.init(world, options);
     
-    // Register with scheduler if available
-    if (this.world.getScheduler) {
-      const scheduler = this.world.getScheduler();
-      const earlyGroup = scheduler.createGroup('early', -10);
-      earlyGroup.addSystem(this);
-    }
+    // Queue for processing events
+    this.eventQueue = [];
+    
+    // Cache for listener lookups (eventType -> array of listeners)
+    this.listenerCache = new Map();
+    
+    // Listener for wildcard events (listen to all events)
+    this.wildcardListeners = [];
+    
+    // Debug mode can be enabled to log events
+    this.debugMode = options.debugMode || false;
     
     console.info('EventSystem: Initialized');
+    return this;
   }
   
-  // Create events programmatically
-  createEvent(type, data = {}) {
-    const entityId = this.world.createEntity();
-    this.world.addComponent(entityId, EVENT, {
-      type,
-      data,
-      timestamp: Date.now(),
-      processed: false
-    });
-    return entityId;
-  }
-  
-  // Register a listener
-  addListener(entityId, eventType, priority = 0) {
-    const listener = this.world.getComponent(entityId, EVENT_LISTENER);
-    if (listener) {
-      // Add this event type to existing listener
-      if (!listener.types.includes(eventType)) {
-        listener.types.push(eventType);
-      }
-    } else {
-      // Create new listener component
-      this.world.addComponent(entityId, EVENT_LISTENER, {
-        types: [eventType],
-        priority
-      });
-    }
-    
-    // Invalidate cache
-    this._invalidateCache(eventType);
-  }
-  
-  // Remove listener
-  removeListener(entityId, eventType) {
-    const listener = this.world.getComponent(entityId, EVENT_LISTENER);
-    if (!listener) return;
-    
-    if (eventType) {
-      // Remove specific event type
-      const index = listener.types.indexOf(eventType);
-      if (index >= 0) {
-        listener.types.splice(index, 1);
-        this._invalidateCache(eventType);
-      }
-    } else {
-      // Remove all event types
-      const types = [...listener.types];
-      listener.types = [];
-      types.forEach(type => this._invalidateCache(type));
-    }
-  }
-  
-  // Emit an event from a specific entity
-  emitFromEntity(sourceEntityId, eventType, eventData = {}) {
-    const eventEntityId = this.createEvent(eventType, eventData);
-    
-    // Store reference to source entity
-    const eventComponent = this.world.getComponent(eventEntityId, EVENT);
-    if (eventComponent) {
-      eventComponent.sourceEntityId = sourceEntityId;
-    }
-    
-    this.pendingEvents.push(eventEntityId);
-    return eventEntityId;
-  }
-  
+  /**
+   * Update method called each frame
+   * Processes all events in the queue
+   */
   update() {
-    // Process any pending events
-    const events = [...this.pendingEvents];
-    this.pendingEvents = [];
+    // Skip if no events to process
+    if (this.eventQueue.length === 0) return;
     
-    for (const eventEntityId of events) {
+    // Process events in the order they were added
+    const eventsToProcess = [...this.eventQueue];
+    this.eventQueue = [];
+    
+    for (const eventEntityId of eventsToProcess) {
       this._processEvent(eventEntityId);
     }
-  }
-  
-  // Get all listeners for an event type (with caching)
-  _getListenersForType(eventType) {
-    if (this.listenerCache.has(eventType)) {
-      return this.listenerCache.get(eventType);
+    
+    // Invalid the listener cache occasionally to ensure we pick up new listeners
+    if (Math.random() < 0.05) { // ~5% chance each frame
+      this._invalidateListenerCache();
     }
-    
-    const listeners = [];
-    
-    // Find all entities with EVENT_LISTENER component that listen for this type
-    for (const entityId of this.world.getEntitiesWith(EVENT_LISTENER)) {
-      const listener = this.world.getComponent(entityId, EVENT_LISTENER);
-      if (listener && listener.types.includes(eventType)) {
-        listeners.push({
-          entityId,
-          priority: listener.priority || 0
-        });
-      }
-    }
-    
-    // Sort by priority (higher first)
-    listeners.sort((a, b) => b.priority - a.priority);
-    
-    // Cache result
-    this.listenerCache.set(eventType, listeners);
-    return listeners;
   }
   
-  _invalidateCache(eventType) {
-    this.listenerCache.delete(eventType);
-  }
-  
+  /**
+   * Process a single event
+   * @param {number} eventEntityId - Entity ID of the event
+   * @private
+   */
   _processEvent(eventEntityId) {
     const eventComponent = this.world.getComponent(eventEntityId, EVENT);
     if (!eventComponent || eventComponent.processed) return;
@@ -160,57 +93,200 @@ class EventSystem extends System {
         eventData: data,
         eventEntityId,
         sourceEntityId: eventComponent.sourceEntityId,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        processed: false
       });
     }
     
-    // Handle event bubbling for namespaced events
-    if (type.includes(':')) {
-      const parts = type.split(':');
-      parts.pop();
-      if (parts.length > 0) {
-        const parentType = parts.join(':');
-        this.emitFromEntity(eventComponent.sourceEntityId, parentType, data);
+    // Also call direct callbacks if they exist
+    for (const { callback } of listeners) {
+      if (typeof callback === 'function') {
+        try {
+          callback(data, {
+            type,
+            eventEntityId,
+            sourceEntityId: eventComponent.sourceEntityId
+          });
+        } catch (error) {
+          console.error(`EventSystem: Error in listener callback for "${type}":`, error);
+        }
       }
+    }
+    
+    if (this.debugMode) {
+      console.log(`EventSystem: Processed event "${type}" with ${listeners.length} listeners`);
     }
   }
   
-  // Global event bus API for backward compatibility
-  on(eventType, callback, priority = 0) {
-    // Create a listener entity for this callback
-    const entityId = this.world.createEntity();
+  /**
+   * Get all listeners for a specific event type
+   * @param {string} eventType - Type of event
+   * @returns {Array} Array of listener objects
+   * @private
+   */
+  _getListenersForType(eventType) {
+    // Check cache first
+    if (this.listenerCache.has(eventType)) {
+      return this.listenerCache.get(eventType);
+    }
     
-    // Store the callback in a script component
-    this.world.addComponent(entityId, 'script', {
-      handleEvent: (data) => callback(data)
+    // Find all entities with EVENT_LISTENER component
+    const listenerEntities = this.world.getEntitiesWith(EVENT_LISTENER);
+    const matchingListeners = [];
+    
+    // Filter for listeners that match this event type
+    for (const entityId of listenerEntities) {
+      const listener = this.world.getComponent(entityId, EVENT_LISTENER);
+      if (!listener) continue;
+      
+      // Check if this listener matches the event type (or is a wildcard)
+      if (listener.eventType === eventType || listener.eventType === '*') {
+        matchingListeners.push({
+          entityId,
+          callback: listener.callback,
+          priority: listener.priority || 0
+        });
+      }
+    }
+    
+    // Sort by priority (higher priorities first)
+    matchingListeners.sort((a, b) => b.priority - a.priority);
+    
+    // Store in cache for future lookups
+    this.listenerCache.set(eventType, matchingListeners);
+    
+    return matchingListeners;
+  }
+  
+  /**
+   * Clear the listener cache
+   * @private
+   */
+  _invalidateListenerCache() {
+    this.listenerCache.clear();
+  }
+  
+  /**
+   * Create and emit an event
+   * @param {string} type - Type of event
+   * @param {Object} data - Event data
+   * @param {number} sourceEntityId - Entity that emitted the event
+   * @returns {number} ID of the created event entity
+   */
+  emit(type, data = {}, sourceEntityId = null) {
+    // Create a new entity for this event with the isEventEntity flag set to true
+    const eventEntityId = this.world.createEntity({
+      isEventEntity: true, // Important to prevent recursive event emission
+      emitEvent: false // Don't emit an event for creating an event entity
     });
     
-    // Add as event listener
-    this.addListener(entityId, eventType, priority);
+    // Add the event component
+    this.world.addComponent(eventEntityId, EVENT, {
+      type,
+      data,
+      processed: false,
+      timestamp: Date.now(),
+      sourceEntityId
+    });
     
-    return entityId; // Return entity ID for removal
-  }
-  
-  off(entityId) {
-    // Remove all listeners for this entity
-    this.removeListener(entityId);
+    // Add to the processing queue
+    this.eventQueue.push(eventEntityId);
     
-    // Destroy the entity
-    this.world.destroyEntity(entityId);
-  }
-  
-  emit(eventType, data) {
-    // Create a temporary entity to emit the event
-    const sourceEntityId = this.world.createEntity();
-    
-    // Emit and get event entity ID
-    const eventEntityId = this.emitFromEntity(sourceEntityId, eventType, data);
-    
-    // Clean up source entity after processing
-    this.world.destroyEntity(sourceEntityId);
+    if (this.debugMode) {
+      console.log(`EventSystem: Emitted event "${type}" with data:`, data);
+    }
     
     return eventEntityId;
   }
+  
+  /**
+   * Add an event listener
+   * @param {string} eventType - Type of event to listen for
+   * @param {Function} callback - Function to call when event is received
+   * @param {number} priority - Priority of listener (higher is processed first)
+   * @returns {number} ID of the created listener entity
+   */
+  on(eventType, callback, priority = 0) {
+    // Create a new entity for this listener
+    const listenerEntityId = this.world.createEntity();
+    
+    // Add the listener component
+    this.world.addComponent(listenerEntityId, EVENT_LISTENER, {
+      eventType,
+      callback,
+      priority
+    });
+    
+    // Invalidate listener cache when new listeners are added
+    this._invalidateListenerCache();
+    
+    if (this.debugMode) {
+      console.log(`EventSystem: Added listener for "${eventType}" with priority ${priority}`);
+    }
+    
+    return listenerEntityId;
+  }
+  
+  /**
+   * Remove an event listener
+   * @param {string} eventType - Type of event
+   * @param {Function} callback - Callback function to remove
+   * @returns {boolean} True if listener was removed
+   */
+  off(eventType, callback) {
+    // Find matching listener entities
+    const listenerEntities = this.world.getEntitiesWith(EVENT_LISTENER);
+    let removed = false;
+    
+    for (const entityId of listenerEntities) {
+      const listener = this.world.getComponent(entityId, EVENT_LISTENER);
+      
+      // Check if this is the listener we want to remove
+      if (listener && 
+          listener.eventType === eventType && 
+          (!callback || listener.callback === callback)) {
+        // Remove the entity
+        this.world.removeEntity(entityId);
+        removed = true;
+      }
+    }
+    
+    // Invalidate cache if any listeners were removed
+    if (removed) {
+      this._invalidateListenerCache();
+    }
+    
+    return removed;
+  }
+  
+  /**
+   * Add a one-time event listener
+   * @param {string} eventType - Type of event to listen for
+   * @param {Function} callback - Function to call when event is received
+   * @returns {number} ID of the created listener entity
+   */
+  once(eventType, callback) {
+    // Create a wrapper that will remove itself after being called
+    const onceWrapper = (data, eventInfo) => {
+      // Call the original callback
+      callback(data, eventInfo);
+      
+      // Remove this listener
+      this.off(eventType, onceWrapper);
+    };
+    
+    // Add the wrapped listener
+    return this.on(eventType, onceWrapper);
+  }
+  
+  /**
+   * Enable or disable debug mode
+   * @param {boolean} enabled - Whether debug mode should be enabled
+   */
+  setDebugMode(enabled) {
+    this.debugMode = enabled;
+    console.log(`EventSystem: Debug mode ${enabled ? 'enabled' : 'disabled'}`);
+  }
 }
 
-export { EventSystem, EVENT_EMITTER, EVENT_LISTENER, EVENT, EVENT_NOTIFICATION };
+export { EventSystem };

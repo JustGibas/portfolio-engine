@@ -1,22 +1,30 @@
 # Portfolio Engine
 =========================================================================
-█▀█ █▀█ █▀█ ▀█▀ █▀▀ █▀█ █   █ █▀█   █▀▀ █▄░█ █▀▀ █ █▄░█ █▀▀
-█▀▀ █▄█ █▀▄ ░█░ █▀░ █▄█ █▄▄ █ █▄█   ██▄ █░▀█ █▄█ █ █░▀█ ██▄
 
-█▀█ █▀▀ ▄▀█ █▀▄ █▀▄▀█ █▀▀
-█▀▄ ██▄ █▀█ █▄▀ █░▀░█ ██▄
-
-A modular portfolio system built with an Entity Component System architecture.
+A modular portfolio system built with an Entity Component System (ECS) architecture. It enables dynamic content loading, modular design, and efficient performance for portfolio projects.
 
 =========================================================================
-## 🤖 **AI Development Environment**
 
-This project uses a structured AI development workflow managed through the `ai-user-workspace` directory created by JG:
+## 🤖 AI Developer Guide
 
-### For AI Models:
+This project uses a structured AI development workflow to ensure seamless collaboration between AI agents and human developers.
 
-1. **ALWAYS START HERE**: Read [AI Configuration](./ai-user-workspace/AI-Config.md)
-2. **CHECK PERMISSIONS**: Only modify files listed in AI-Config.md
-3. **FOLLOW WORKFLOW**: Execute tasks based on current configuration
-4. **UPDATE PROGRESS**: Document changes in ai-user-workspace
+### Key Steps for AI Agents:
+
+1. **Start Here**: Read the [AI Configuration](./ai-user-workspace/AI-Config.md) for permissions and guidelines.
+2. **Follow Workflow**: Use the [AI-User Workflow](./ai-user-workspace/ai-user-guide.md) to execute tasks.
+3. **Explore Proposals**: Review [Development Proposals](./ai-user-workspace/dev-proposals/README.md) for planned changes.
+4. **Check Tasks**: Work on [AI-Specific Tasks](./ai-user-workspace/ai-tasks/) or [User-Specific Tasks](./ai-user-workspace/user-tasks/).
+
+### Commands for AI Agents:
+
+- `Implement [task name]` - Start a specific task.
+- `Continue with current task` - Resume the last task.
+- `List proposals` - Show available proposals.
+- `Select proposal #[number]` - Begin work on a specific proposal.
+
+=========================================================================
+
+**Note**: Always adhere to the permissions and guidelines outlined in the AI Configuration file.
+
 

@@ -4,9 +4,9 @@
  * Main DevTools page that provides debugging tools and system information.
  * Accessible via the #devtools route.
  */
-import { cssLoader } from '../../engine/utils/css-loader.js';
-import config from '../../config.js';
-import { devToolsManager } from '../../modules/dev-tools/dev-tools-manager.js';
+import { cssLoader } from '../../engine/modules/css-loader.js';
+import config from '../../OLD/config.js';
+import { devToolsManager } from '../../engine/modules/dev-tools/dev-tools.js';
 
 const devtools = {
   // Content data for the DevTools page
@@ -14,6 +14,9 @@ const devtools = {
     title: "Developer Tools",
     description: "System debugging and development tools"
   },
+  
+  // Active tests
+  tests: [],
   
   /**
    * Initialize the DevTools page
@@ -64,6 +67,7 @@ const devtools = {
           <button class="tab-button" data-tab="components">Components</button>
           <button class="tab-button" data-tab="events">Events</button>
           <button class="tab-button" data-tab="console">Console</button>
+          <button class="tab-button" data-tab="tests">Tests</button>
         </div>
         
         <div class="devtools-tab-content">
@@ -123,6 +127,67 @@ const devtools = {
               <button id="execute-command">Execute</button>
             </div>
           </div>
+          
+          <div class="tab-panel" id="tests-panel">
+            <h3>Tests</h3>
+            <div class="test-controls">
+              <button id="run-all-tests">Run All Tests</button>
+              <button id="clear-test-results">Clear Results</button>
+            </div>
+            <div class="test-categories">
+              <div class="test-category">
+                <h4>Core Systems</h4>
+                <ul class="test-list" id="core-tests-list">
+                  <li class="test-item">
+                    <span class="test-name">ECS Availability Test</span>
+                    <button class="run-test-btn" data-test="ecs-availability">Run</button>
+                  </li>
+                  <li class="test-item">
+                    <span class="test-name">Module System Test</span>
+                    <button class="run-test-btn" data-test="module-system">Run</button>
+                  </li>
+                  <li class="test-item">
+                    <span class="test-name">Event System Test</span>
+                    <button class="run-test-btn" data-test="event-system">Run</button>
+                  </li>
+                </ul>
+              </div>
+              
+              <!-- Updated Core Initialization Tests Category -->
+              <div class="test-category">
+                <h4>Core Initialization Tests</h4>
+                <ul class="test-list" id="init-tests-list">
+                  <li class="test-item">
+                    <span class="test-name">Scheduler Diagnostics</span>
+                    <button class="run-test-btn" data-test="scheduler-diagnostics">Run</button>
+                  </li>
+                  <li class="test-item">
+                    <span class="test-name">System Initialization Status</span>
+                    <button class="run-test-btn" data-test="system-init-status">Run</button>
+                  </li>
+                  <li class="test-item">
+                    <span class="test-name">Resource Loading Test</span>
+                    <button class="run-test-btn" data-test="resource-loading-test">Run</button>
+                  </li>
+                </ul>
+              </div>
+              
+              <div class="test-category">
+                <h4>UI Components</h4>
+                <ul class="test-list" id="ui-tests-list">
+                  <li class="test-item">
+                    <span class="test-name">Header Component Test</span>
+                    <button class="run-test-btn" data-test="header-component">Run</button>
+                  </li>
+                  <li class="test-item">
+                    <span class="test-name">Theme Selector Test</span>
+                    <button class="run-test-btn" data-test="theme-selector">Run</button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="test-results" id="test-results"></div>
+          </div>
         </div>
       </div>
     `;
@@ -137,6 +202,9 @@ const devtools = {
     
     // Set up event listeners
     this._setupEventListeners(container);
+    
+    // Set up test event listeners
+    this._setupTestEventListeners(container);
   },
   
   /**
@@ -402,6 +470,279 @@ const devtools = {
         eventsLog.innerHTML = '';
       });
     }
+  },
+  
+  /**
+   * Set up test event listeners
+   * @private
+   * @param {HTMLElement} container - The container element
+   */
+  _setupTestEventListeners(container) {
+    // Run all tests button
+    const runAllTestsBtn = container.querySelector('#run-all-tests');
+    if (runAllTestsBtn) {
+      runAllTestsBtn.addEventListener('click', () => {
+        this._runAllTests();
+      });
+    }
+    
+    // Clear test results button
+    const clearTestResultsBtn = container.querySelector('#clear-test-results');
+    if (clearTestResultsBtn) {
+      clearTestResultsBtn.addEventListener('click', () => {
+        const testResults = container.querySelector('#test-results');
+        if (testResults) testResults.innerHTML = '';
+      });
+    }
+    
+    // Individual test buttons
+    const runTestBtns = container.querySelectorAll('.run-test-btn');
+    runTestBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const testName = e.target.getAttribute('data-test');
+        this._runTest(testName);
+      });
+    });
+  },
+  
+  /**
+   * Run all tests
+   * @private
+   */
+  _runAllTests() {
+    const testButtons = document.querySelectorAll('.run-test-btn');
+    testButtons.forEach(btn => {
+      const testName = btn.getAttribute('data-test');
+      this._runTest(testName);
+    });
+  },
+  
+  /**
+   * Run a specific test
+   * @private
+   * @param {string} testName - The name of the test to run
+   */
+  _runTest(testName) {
+    const testResults = document.getElementById('test-results');
+    if (!testResults) return;
+    
+    const timestamp = new Date().toLocaleTimeString();
+    
+    // Define test cases
+    const tests = {
+      'ecs-availability': () => {
+        if (!this.ecs) throw new Error('ECS is not available');
+        
+        // Check basic ECS functionality
+        const entityCount = this.ecs.entities.size;
+        const systemCount = this.ecs.systems.length;
+        
+        return {
+          success: true,
+          message: `ECS is available with ${entityCount} entities and ${systemCount} systems`
+        };
+      },
+      
+      'module-system': () => {
+        const moduleSystem = this.ecs.getSystem('module');
+        if (!moduleSystem) throw new Error('Module system not found');
+        
+        // Test loading a simple module
+        const testModuleName = 'test-module';
+        const testModule = { name: testModuleName, init: () => {} };
+        
+        moduleSystem.register(testModuleName, testModule);
+        const loadedModule = moduleSystem.get(testModuleName);
+        
+        if (!loadedModule) throw new Error('Failed to retrieve registered module');
+        
+        return {
+          success: true,
+          message: 'Module System is functioning correctly'
+        };
+      },
+      
+      'event-system': () => {
+        const eventSystem = this.ecs.getSystem('event');
+        if (!eventSystem) throw new Error('Event system not found');
+        
+        // Test firing an event
+        let eventFired = false;
+        const testHandler = () => { eventFired = true; };
+        
+        eventSystem.on('test-event', testHandler);
+        eventSystem.emit('test-event', { test: true });
+        eventSystem.off('test-event', testHandler);
+        
+        if (!eventFired) throw new Error('Event was not received by handler');
+        
+        return {
+          success: true,
+          message: 'Event System is functioning correctly'
+        };
+      },
+      
+      'header-component': () => {
+        const headerElement = document.querySelector('header');
+        if (!headerElement) throw new Error('Header element not found in DOM');
+        
+        // Check for essential header elements
+        const navContainer = headerElement.querySelector('[id*="nav"]');
+        if (!navContainer) throw new Error('Navigation container not found in header');
+        
+        return {
+          success: true,
+          message: 'Header component is present and contains navigation'
+        };
+      },
+      
+      'theme-selector': () => {
+        // Check if theme related functions exist
+        if (typeof document.documentElement.getAttribute('data-theme') !== 'string') {
+          throw new Error('Theme attribute not found on document element');
+        }
+        
+        // Test theme change
+        const originalTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = originalTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        const changedTheme = document.documentElement.getAttribute('data-theme');
+        
+        // Restore original theme
+        document.documentElement.setAttribute('data-theme', originalTheme);
+        
+        if (changedTheme !== newTheme) throw new Error('Theme change failed');
+        
+        return {
+          success: true,
+          message: `Theme selector functionality working. Current theme: ${originalTheme}`
+        };
+      },
+      
+      // Updated tests for core initialization
+      'scheduler-diagnostics': () => {
+        // Deep inspection of scheduler
+        if (!this.ecs) throw new Error('ECS is not available');
+        
+        const result = {
+          hasScheduler: !!this.ecs.scheduler,
+          schedulerMethods: this.ecs.scheduler ? Object.keys(this.ecs.scheduler) : [],
+          hasGetGroup: this.ecs.scheduler ? typeof this.ecs.scheduler.getGroup === 'function' : false,
+          prototype: this.ecs.scheduler ? Object.getPrototypeOf(this.ecs.scheduler) : null
+        };
+        
+        // Format the message
+        const message = `
+Scheduler Diagnostics:
+- Scheduler exists: ${result.hasScheduler}
+- getGroup method exists: ${result.hasGetGroup}
+- Available methods: ${result.schedulerMethods.join(', ')}
+- Missing getGroup may cause ErrorSystem and EventSystem init failures
+`;
+        
+        return {
+          success: result.hasScheduler,
+          message: message
+        };
+      },
+      
+      'system-init-status': () => {
+        if (!this.ecs) throw new Error('ECS is not available');
+        
+        // Get more detailed system status
+        const systems = Array.isArray(this.ecs.systems) ? this.ecs.systems : [];
+        
+        // Format each system with its status
+        const systemDetails = systems.map(sys => {
+          const name = sys.name || sys.constructor?.name || 'Unknown';
+          const initialized = sys._initialized === true;
+          const enabled = sys.enabled !== false;
+          const hasInit = typeof sys.init === 'function';
+          const hasUpdate = typeof sys.update === 'function';
+          
+          return `${name}: ${initialized ? '✅' : '❌'} initialized, ${enabled ? '✅' : '❌'} enabled, ${hasInit ? '✅' : '❌'} has init()`;
+        });
+        
+        // Count initialized vs non-initialized
+        const initializedCount = systems.filter(sys => sys._initialized === true).length;
+        
+        return {
+          success: true,
+          message: `Systems initialized: ${initializedCount}/${systems.length}\n\n${systemDetails.join('\n')}`
+        };
+      },
+      
+      'resource-loading-test': () => {
+        // Test critical resource loading
+        const resources = [
+          { name: 'Theme Selector', path: '/engine/modules/theme-selector/theme-selector.js', required: false },
+          { name: 'Layout System', path: '/engine/systems/layoutSystem.js', required: false },
+          { name: 'Module Core', path: '/engine/core/module.js', required: true },
+          { name: 'DevTools CSS', path: '/dev-tools.css', required: false }
+        ];
+        
+        // Test if files exist by creating image objects (non-invasive test)
+        const results = resources.map(res => {
+          const fullPath = `${window.location.origin}${res.path}`;
+          
+          // Test if path is accessible (doesn't download the file)
+          const linkEl = document.createElement('link');
+          linkEl.rel = 'prefetch';
+          linkEl.href = fullPath;
+          
+          return {
+            name: res.name,
+            path: res.path, 
+            fullPath: fullPath,
+            required: res.required
+          };
+        });
+        
+        const message = `
+Resource Loading Diagnostics:
+${results.map(r => `- ${r.name}: ${r.path} (${r.required ? 'Required' : 'Optional'})
+  Full URL: ${r.fullPath}`).join('\n')}
+
+Note: 404 errors for theme-selector.js and layoutSystem.js in console indicate missing files.
+`;
+        
+        return {
+          success: true,
+          message: message
+        };
+      }
+    };
+    
+    // Run the selected test
+    try {
+      if (!tests[testName]) throw new Error(`Test '${testName}' not found`);
+      
+      const result = tests[testName]();
+      
+      testResults.innerHTML += `
+        <div class="test-result success">
+          <div class="test-result-header">
+            <span class="test-result-name">${testName}</span>
+            <span class="test-result-time">${timestamp}</span>
+          </div>
+          <div class="test-result-message">${result.message}</div>
+        </div>
+      `;
+    } catch (error) {
+      testResults.innerHTML += `
+        <div class="test-result failure">
+          <div class="test-result-header">
+            <span class="test-result-name">${testName}</span>
+            <span class="test-result-time">${timestamp}</span>
+          </div>
+          <div class="test-result-message">${error.message}</div>
+        </div>
+      `;
+    }
+    
+    // Scroll to the latest result
+    testResults.scrollTop = testResults.scrollHeight;
   },
   
   // Lifecycle methods

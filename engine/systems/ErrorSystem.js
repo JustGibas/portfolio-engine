@@ -4,7 +4,7 @@
  * Handles errors through ECS components and entities
  */
 import { System } from '../core/system.js';
-import { EventSystem } from './EventSystem.js';
+import { EventSystem } from './eventSystem.js';
 
 // Component Types
 const ERROR = 'error';
@@ -19,22 +19,47 @@ class ErrorSystem extends System {
     
     this.errorLog = [];
     this.handlerCache = new Map(); // context -> entityIds[]
+    
+    // Use simple defaults instead of complex config
     this.config = {
       logToConsole: true,
-      maxLogSize: 100
+      maxLogSize: 100,
+      enableDevMode: true  // Whether to enable dev mode for critical errors
     };
     
-    // Register with scheduler if available
-    if (this.world.getScheduler) {
-      const scheduler = this.world.getScheduler();
-      const earlyGroup = scheduler.getGroup('early') || scheduler.createGroup('early', -20); // Higher priority than EventSystem
-      earlyGroup.addSystem(this);
+    // Register with TaskManager instead of using the old scheduler API
+    if (this.world.systemManager) {
+      try {
+        // Get the taskManager from the system manager
+        const taskManager = this.world.systemManager.getScheduler();
+        if (taskManager) {
+          // Make sure early group exists
+          if (!taskManager.taskGroups.has('early')) {
+            taskManager.createGroup('early', -20); // Higher priority
+          }
+          
+          // Add this system as a task in the early group
+          taskManager.addTask(this, {
+            name: 'error',
+            group: 'early',
+            priority: -20,
+            enabled: true
+          });
+          
+          console.info('ErrorSystem: Registered with TaskManager in early group');
+        } else {
+          console.warn('ErrorSystem: TaskManager not available');
+        }
+      } catch (error) {
+        console.warn('ErrorSystem: Failed to register with TaskManager:', error);
+      }
     }
     
     // Create default handler entity
     this._createDefaultHandlers();
     
     console.info('ErrorSystem: Initialized');
+    return this;
   }
   
   // Create an error entity
@@ -77,14 +102,9 @@ class ErrorSystem extends System {
       this.hasCriticalErrors = true;
       
       // Enable dev mode automatically for critical errors
-      if (!localStorage.getItem('devMode')) {
+      if (this.config.enableDevMode && !localStorage.getItem('devMode')) {
         console.warn('Critical error detected, enabling dev mode automatically');
         localStorage.setItem('devMode', 'true');
-        
-        // Add DevTools to navigation if not already present
-        if (this.config?.advanced) {
-          this.config.advanced.debug = true;
-        }
         
         // Navigate to DevTools page for debugging
         if (!window.location.hash.includes('devtools')) {

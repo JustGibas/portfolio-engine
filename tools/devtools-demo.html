@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Engine DevTools</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    h1 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .actions {
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .example-section {
+      margin-top: 30px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    pre {
+      background-color: #f8f8f8;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    code {
+      font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Portfolio Engine DevTools</h1>
+    <p>This is a standalone version of the DevTools that can be used to develop the Portfolio Engine.</p>
+    
+    <div class="actions">
+      <button id="create-entity">Create Entity</button>
+      <button id="create-position-component">Create Entity with Position</button>
+      <button id="connect-engine">Connect to Engine (if available)</button>
+    </div>
+    
+    <div class="example-section">
+      <h2>How to Use</h2>
+      <p>Click the "🛠️ DevTools" button at the bottom-right to open the DevTools panel.</p>
+      <p>You can:</p>
+      <ul>
+        <li>Create and view entities</li>
+        <li>Add components to entities</li>
+        <li>Register component types</li>
+        <li>Run tests to verify functionality</li>
+      </ul>
+    </div>
+    
+    <div class="example-section">
+      <h2>Code Example</h2>
+      <pre><code>// Create an entity with components
+const entityId = devTools.createEntity();
+devTools.addComponent(entityId, 'position', { x: 100, y: 200 });
+devTools.addComponent(entityId, 'renderable', { 
+  visible: true, 
+  shape: 'circle',
+  radius: 20
+});</code></pre>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { StandaloneDevTools } from './standalone-devtools.js';
+    
+    // Create an instance of the DevTools
+    const devTools = new StandaloneDevTools();
+    
+    // Make it available globally
+    window.devTools = devTools;
+    
+    // Set up button actions
+    document.getElementById('create-entity').addEventListener('click', () => {
+      const entityId = devTools.createEntity();
+      alert(`Created entity with ID: ${entityId}`);
+    });
+    
+    document.getElementById('create-position-component').addEventListener('click', () => {
+      const entityId = devTools.createEntity();
+      devTools.addComponent(entityId, 'position', { x: Math.random() * 100, y: Math.random() * 100 });
+      alert(`Created entity ${entityId} with random position`);
+    });
+    
+    document.getElementById('connect-engine').addEventListener('click', () => {
+      if (window.portfolioEngine) {
+        devTools.connectToEngine(window.portfolioEngine);
+        alert('Connected to existing engine instance');
+      } else {
+        alert('No engine instance found on window.portfolioEngine');
+      }
+    });
+  </script>
+</body>
+</html>

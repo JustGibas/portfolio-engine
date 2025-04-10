@@ -1,65 +1,103 @@
 /**
+ * =====================================================================
+ * █▀█ █▀█ █▀█ ▀█▀ █▀▀ █▀█ █   █ █▀█   █▀▀ █▄░█ █▀▀ █ █▄░█ █▀▀
+ * █▀▀ █▄█ █▀▄ ░█░ █▀░ █▄█ █▄▄ █ █▄█   ██▄ █░▀█ █▄█ █ █░▀█ ██▄
+ * 
  * @fileoverview Base System Class
  * 
- * Base class for all systems in the ECS architecture.
- * Provides common functionality and lifecycle methods.
+ * This file defines the `System` class, which serves as the base class
+ * for all systems in the ECS architecture. Systems encapsulate logic
+ * that operates on entities with specific components.
+ * 
+ * ## Key Responsibilities:
+ * - Provide a common interface for all systems
+ * - Manage lifecycle methods (`init`, `update`, `mount`, `unmount`)
+ * - Facilitate interaction with the ECS world
+ * 
+ * ## Example Usage:
+ * ```javascript
+ * class MovementSystem extends System {
+ *   update(deltaTime) {
+ *     const entities = this.getEntitiesWith('position', 'velocity');
+ *     entities.forEach(entityId => {
+ *       const position = this.world.getComponent(entityId, 'position');
+ *       const velocity = this.world.getComponent(entityId, 'velocity');
+ *       position.x += velocity.x * deltaTime;
+ *       position.y += velocity.y * deltaTime;
+ *     });
+ *   }
+ * }
+ * ```
+ * 
+ * ## Questions for JG:
+ * [ ] Should we add a priority system for system execution order?
+ * [ ] Are there any additional lifecycle methods needed?
  */
 
 /**
- * Base System class that all systems should extend
+ * Base System class that all systems should extend.
+ * Systems process entities with specific components and encapsulate behavior.
  */
 class System {
   /**
-   * Initialize the system with the world and options
-   * @param {Object} world - The ECS world instance
-   * @param {Object} options - System-specific options
+   * Constructs a new system.
+   * @param {Object} [options={}] - Options for the system.
+   * @param {number} [options.priority] - Execution priority (lower runs first).
+   * @param {Array<string>} [options.dependencies] - List of required component names.
    */
-  init(world, options = {}) {
-    this.world = world;
+  constructor(options = {}) {
     this.options = options;
     this.enabled = true;
+    this.world = null;
+    this.name = this.constructor.name;
+    this.priority = options.priority || 0;
+    this.dependencies = options.dependencies || [];
+    this.groupPriority = 0; // Used by scheduler if set.
+    this.systemPriority = 0; // Also set by scheduler.
   }
   
   /**
-   * Called when system is activated - override in subclasses
+   * Initializes the system with the world context.
+   * @param {Object} world - The ECS world instance.
+   * @param {Object} [options={}] - Additional options to merge.
+   * @returns {System} The system instance.
+   */
+  init(world, options = {}) {
+    this.world = world;
+    this.options = { ...this.options, ...options };
+    this.enabled = true;
+    return this;
+  }
+  
+  /**
+   * Lifecycle method called when the system is activated.
+   * Override in subclasses to run setup code.
    */
   mount() {
     // To be implemented by subclasses
   }
   
   /**
-   * Update method called each frame - override in subclasses
-   * @param {number} deltaTime - Time elapsed since last update
+   * Called during each update cycle with the elapsed time.
+   * Override in subclasses to define system behavior.
+   * @param {number} deltaTime - Time since last update.
    */
   update(deltaTime) {
-    // To be implemented by subclasses
+    // Override this method in subclasses.
   }
   
   /**
-   * Called when system is deactivated - override in subclasses
+   * Lifecycle method called when the system is deactivated.
+   * Override in subclasses to run teardown code.
    */
   unmount() {
     // To be implemented by subclasses
   }
   
   /**
-   * Enable the system
-   */
-  enable() {
-    this.enabled = true;
-  }
-  
-  /**
-   * Disable the system
-   */
-  disable() {
-    this.enabled = false;
-  }
-  
-  /**
-   * Get entities with specified components
-   * @param {...string} componentTypes - Component types to check for
-   * @returns {Array} Array of entity IDs
+   * Retrieves a list of entity IDs that have all specified components.
+   * @param {...string} componentTypes - Component names to search for.
+   * @returns {Array<number>} Array of matching entity IDs.
    */
   getEntitiesWith(...componentTypes) {
     if (this.world && typeof this.world.getEntitiesWith === 'function') {
@@ -69,9 +107,9 @@ class System {
   }
   
   /**
-   * Emit an event through the event system
-   * @param {string} event - Event name
-   * @param {Object} data - Event data
+   * Emits an event using the world's event system.
+   * @param {string} event - The event name.
+   * @param {Object} data - Data payload for the event.
    */
   emit(event, data) {
     const eventSystem = this.world?.getSystem('event');
@@ -81,9 +119,9 @@ class System {
   }
   
   /**
-   * Listen for an event
-   * @param {string} event - Event name
-   * @param {Function} callback - Event handler
+   * Registers an event listener through the world's event system.
+   * @param {string} event - The event name.
+   * @param {Function} callback - Handler function.
    */
   on(event, callback) {
     const eventSystem = this.world?.getSystem('event');
@@ -93,9 +131,9 @@ class System {
   }
   
   /**
-   * Remove event listener
-   * @param {string} event - Event name
-   * @param {Function} callback - Event handler (optional)
+   * Removes an event listener.
+   * @param {string} event - The event name.
+   * @param {Function} callback - (Optional) Specific handler to remove.
    */
   off(event, callback) {
     const eventSystem = this.world?.getSystem('event');
@@ -105,9 +143,10 @@ class System {
   }
   
   /**
-   * Handle system error
-   * @param {Error} error - Error object
-   * @param {string} context - Error context
+   * Handles errors that occur within the system.
+   * Delegates error handling to the error system if available.
+   * @param {Error} error - The error instance caught.
+   * @param {string} [context='system'] - Description of the error context.
    */
   handleError(error, context = 'system') {
     const errorSystem = this.world?.getSystem('error');
@@ -121,6 +160,30 @@ class System {
       errorSystem.handleError(errorId);
     } else {
       console.error(`${this.constructor.name} error (${context}):`, error);
+    }
+  }
+  
+  /**
+   * Registers this system with the world's scheduler.
+   * @param {string} groupName - The scheduler group name.
+   * @param {number} [priority=0] - Priority within the group.
+   */
+  registerWithScheduler(groupName, priority = 0) {
+    if (!this.world) {
+      console.warn(`${this.name}: Cannot register with scheduler - no world assigned`);
+      return;
+    }
+    const scheduler = this.world.getScheduler();
+    if (!scheduler) {
+      console.warn(`${this.name}: World has no scheduler`);
+      return;
+    }
+    try {
+      const group = scheduler.getGroup(groupName) || scheduler.createGroup(groupName);
+      group.addSystem(this, priority);
+      console.info(`${this.name}: Registered with scheduler in group "${groupName}"`);
+    } catch (error) {
+      console.error(`${this.name}: Failed to register with scheduler:`, error);
     }
   }
 }
