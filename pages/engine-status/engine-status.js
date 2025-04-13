@@ -1,25 +1,25 @@
 /**
- * @fileoverview DevTools Page
+ * @fileoverview engine-status Page
  * 
- * Main DevTools page that provides debugging tools and system information.
- * Accessible via the #devtools route.
+ * Main engine-status page that provides system information and debugging tools.
+ * Accessible via the #engine-status route.
  */
 import { cssLoader } from '../../engine/modules/css-loader.js';
-import config from '../../OLD/config.js';
-import { devToolsManager } from '../../engine/modules/dev-tools/dev-tools.js';
+//import config from '../../OLD/config.js';
+//import { devToolsManager } from '../../engine/modules/dev-tools/dev-tools.js';
 
 const devtools = {
-  // Content data for the DevTools page
+  // Content data for the Engine Status page
   content: {
-    title: "Developer Tools",
-    description: "System debugging and development tools"
+    title: "Engine Status",
+    description: "System information and debugging tools"
   },
   
   // Active tests
   tests: [],
   
   /**
-   * Initialize the DevTools page
+   * Initialize the Engine Status page
    * @param {Object} entity - The entity representing this page
    */
   async init(entity) {
@@ -30,13 +30,13 @@ const devtools = {
     try {
       await cssLoader.loadLocalCSS(import.meta.url);
     } catch (error) {
-      console.warn('Failed to load DevTools page CSS:', error);
+      console.warn('Failed to load Engine Status page CSS:', error);
     }
     
     // Get the container from the entity
     const container = entity.getComponent('dom')?.container;
     if (!container) {
-      console.error('DevTools container not found');
+      console.error('Engine Status container not found');
       return this;
     }
     
@@ -57,11 +57,11 @@ const devtools = {
     if (!container) return;
     
     container.innerHTML = `
-      <div class="devtools-page">
+      <div class="engine-status-page">
         <h2 class="page-title">${this.content.title}</h2>
         <p class="page-description">${this.content.description}</p>
         
-        <div class="devtools-tabs">
+        <div class="engine-status-tabs">
           <button class="tab-button active" data-tab="system">System</button>
           <button class="tab-button" data-tab="entities">Entities</button>
           <button class="tab-button" data-tab="components">Components</button>
@@ -70,7 +70,7 @@ const devtools = {
           <button class="tab-button" data-tab="tests">Tests</button>
         </div>
         
-        <div class="devtools-tab-content">
+        <div class="engine-status-tab-content">
           <div class="tab-panel active" id="system-panel">
             <h3>System Information</h3>
             <div class="info-card">

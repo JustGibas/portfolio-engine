@@ -1,9 +1,9 @@
 /**
- * DevTools page styles
+ * engine-status page styles
  */
 
-/* DevTools page specific styling */
-.devtools-page {
+/* engine-status page specific styling */
+.engine-status-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1.5rem;
@@ -21,7 +21,7 @@
 }
 
 /* Tabs */
-.devtools-tabs {
+.engine-status-tabs {
   display: flex;
   border-bottom: 1px solid var(--border-color, #ccc);
   margin-bottom: 1.5rem;
@@ -193,11 +193,13 @@
 .component-schema {
   max-height: 300px;
   overflow-y: auto;
-  background-color: var(--code-bg-color, #f8f8f8);
+  background-color: var(--card-bg-color);
   padding: 10px;
   font-size: 12px;
   border-radius: 4px;
   white-space: pre-wrap;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 /* Event monitor */

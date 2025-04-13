@@ -7,7 +7,7 @@
  * @module contact
  * @requires config from ../../config.js
  */
-import config from '../../../config.js';
+//import config from '../../../config.js';
 import { cssLoader } from '../../../engine/utils/css-loader.js';
 
 const contact = {
