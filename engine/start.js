@@ -120,6 +120,22 @@ export async function startEngine() {
     world.addSystem('layout', layoutSystem);
     layoutSystem.init(world);
     window.loadingIndicator.updateProgress(65, 'Layout system ready');
+    
+    // Register and initialize the Task System
+    const { TaskSystem } = await import('./systems/taskSystem.js');
+    const taskSystem = new TaskSystem();
+    world.addSystem('task', taskSystem);
+    taskSystem.init(world);
+    window.loadingIndicator.updateProgress(70, 'Task system ready');
+    
+    // Store reference to task system in the world for easy access
+    world.taskSystem = taskSystem;
+    
+    // Create tasks for each system
+    taskSystem.addSystemTask(eventSystem, { priority: 0, name: 'EventSystem Update' });
+    taskSystem.addSystemTask(renderSystem, { priority: 10, name: 'RenderSystem Update' });
+    taskSystem.addSystemTask(layoutSystem, { priority: 5, name: 'LayoutSystem Update' });
+    // Page system doesn't need frequent updates as it's event-driven
    
     
     // ======================================================================

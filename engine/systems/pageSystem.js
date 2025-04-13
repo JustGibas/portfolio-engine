@@ -100,7 +100,23 @@ class PageSystem extends System {
         if (!pageModule) {
           // Dynamically import the page module
           const module = await import(`/pages/${route}/${route}.js`);
-          pageModule = module.default;
+          
+          // Handle different export formats (class or object)
+          if (module.default) {
+            pageModule = module.default;
+          } else if (module.HomePage) {
+            // For pages exporting a class like HomePage
+            pageModule = new module.HomePage(this.world.engine);
+          } else {
+            // Try to use whatever is exported
+            const exportedItem = Object.values(module)[0];
+            if (typeof exportedItem === 'function') {
+              // It's likely a class constructor
+              pageModule = new exportedItem(this.world.engine);
+            } else {
+              pageModule = exportedItem;
+            }
+          }
           
           // Store for future use
           this.pageModules.set(route, pageModule);
@@ -135,13 +151,11 @@ class PageSystem extends System {
           container: pageElement
         });
         
-        // Add reference to the ECS world for the page module
-        pageModule.ecs = this.world;
-        
-        // Initialize the page
+        // Initialize the page - pass world as parameter instead of setting ecs property
         if (typeof pageModule.init === 'function') {
           await pageModule.init({
-            ecs: this.world,
+            world: this.world,
+            engine: this.world.engine,
             getComponent: (type) => this.world.getComponent(pageEntityId, type),
             addComponent: (type, data) => this.world.addComponent(pageEntityId, type, data)
           });

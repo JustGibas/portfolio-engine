@@ -173,6 +173,7 @@ export class DevTools {
     });
     
     // NEW: Touch events for mobile dragging
+    // still not working on mobile, need to test on real device
     document.addEventListener('touchmove', (e) => {
       if (this.isDragging) {
         const touch = e.touches[0];

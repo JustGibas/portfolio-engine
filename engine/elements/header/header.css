@@ -2,6 +2,10 @@
  * Main Header Styles
  */
 
+:root {
+  --header-height: 60px; /* Standard header height - adjust as needed */
+}
+
 .header {
   background-color: var(--header-bg-color);
   color: var(--text-color);
@@ -14,22 +18,59 @@
 }
 
 .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--surface-color);
+  /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
   width: 100%;
-  padding: 0 1rem;
+}
+
+/* Make the title clickable and styled */
+.header-content h1 {
+  cursor: pointer;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  transition: color 0.2s ease;
+}
+
+.header-content h1:hover {
+  color: var(--accent-color);
 }
 
 /* Navigation styling */
 .header-navigation {
   display: flex;
+  gap: 20px;
+  align-items: center;
   flex-grow: 1;
   justify-content: center;
   margin: 0 1.5rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 1rem;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary-color);
+}
+
+.nav-link.active {
+  background-color: var(--primary-color);
+  color: var(--primary-text);
 }
 
 .nav-btn {
@@ -61,7 +102,7 @@
 .header-controls {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 10px;
 }
 
 /* Menu button styling */

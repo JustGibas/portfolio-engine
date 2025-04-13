@@ -45,7 +45,7 @@ export class DevToolsRenderer {
             </div>
             <div class="devtools-controls">
                 <button id="refresh-devtools" title="Refresh DevTools">🔄</button>
-                <button id="minimize-devtools" title="Minimize">🔎</button>
+                <button id="inspect-devtools" title="inspect tool">🔎</button>
                 <button id="close-devtools" title="Close">✕</button>
             </div>
         </div>
@@ -55,7 +55,8 @@ export class DevToolsRenderer {
   // ======================================================================
   // Tab Navigation Rendering
   // ======================================================================
-
+  // preferred sequence of tabs:
+  // overview, performance, engine, entities, components, systems, events, console
   _renderTabs() {
     const tabs = [
         { id: 'overview', icon: '📊', label: 'Overview' },
@@ -64,7 +65,7 @@ export class DevToolsRenderer {
         { id: 'entities', icon: '🎮', label: 'Entities' },
         { id: 'components', icon: '🧩', label: 'Components' },
         { id: 'systems', icon: '⚡', label: 'Systems' },
-        { id: 'event', icon: '📅', label: 'Events'},
+        { id: 'events', icon: '📅', label: 'Events'},
         { id: 'console', icon: '💻', label: 'Console' }
     ];
 
@@ -89,19 +90,23 @@ export class DevToolsRenderer {
     return `
         <div class="tab-contents">
             ${this._renderOverviewTab()}
+            ${this._renderPerformanceTab()}
             ${this._renderEngineTab()}
             ${this._renderEntitiesTab()}
             ${this._renderSystemsTab()}
-            ${this._renderPerformanceTab()}
+            ${this._renderComponentsTab()}
+            ${this._renderEventsTab()}
             ${this._renderConsoleTab()}
         </div>
     `;
   }
 
+  // ======================================================================
+
   _renderOverviewTab() {
     const engineConnected = !!this.devTools.world;
     const memoryUsage = (window.performance && window.performance.memory) 
-      ? Math.round(window.performance.memory.usedJSHeapSize / (1024 * 1024)) 
+      ? Math.round(window.performance.memory.usedJSHeapSize )// (1024 * 1024)) 
       : 'N/A';
     
     const entityCount = engineConnected ? (this.devTools.world.entityManager?.entities?.size || 0) : 0;
@@ -168,6 +173,71 @@ export class DevToolsRenderer {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    `;
+  }
+
+  _renderPerformanceTab() {
+    return `
+        <div class="tab-content" id="performance-tab">
+            <div class="performance-header">
+                <h3>Performance Monitoring</h3>
+                <div class="perf-controls">
+                    <button id="start-recording">Start Recording</button>
+                    <button id="clear-data">Clear Data</button>
+                </div>
+            </div>
+            
+            <div class="perf-charts">
+                <div class="chart-container">
+                    <h4>FPS</h4>
+                    <canvas id="fps-chart" height="100"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Memory Usage</h4>
+                    <canvas id="memory-chart" height="100"></canvas>
+                </div>
+            </div>
+            
+            <div class="perf-metrics">
+                <div class="metric-card">
+                    <div class="metric-title">Average FPS</div>
+                    <div class="metric-value" id="avg-fps">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Min FPS</div>
+                    <div class="metric-value" id="min-fps">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Max FPS</div>
+                    <div class="metric-value" id="max-fps">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Current Memory</div>
+                    <div class="metric-value" id="current-memory">0 MB</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Peak Memory</div>
+                    <div class="metric-value" id="peak-memory">0 MB</div>
+                </div>
+            </div>
+            
+            <div class="perf-table-container">
+                <h3>System Performance</h3>
+                <table class="perf-table">
+                    <thead>
+                        <tr>
+                            <th>System</th>
+                            <th>Avg. Execution Time</th>
+                            <th>Last Execution Time</th>
+                            <th>% of Frame</th>
+                        </tr>
+                    </thead>
+                    <tbody id="system-perf-list">
+                        <tr><td colspan="4">No performance data available</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     `;
@@ -280,6 +350,28 @@ export class DevToolsRenderer {
     `;
   }
 
+  _renderComponentsTab() {
+    const engineConnected = !!this.devTools.world;
+
+    return `
+        <div class="tab-content" id="components-tab">
+            <div class="components-header">
+                <h3>Components</h3>
+                <div class="components-tools">
+                    <button id="refresh-components" ${!engineConnected ? 'disabled' : ''}>Refresh</button>
+                </div>
+            </div>
+            
+            <div class="components-list">
+                ${!engineConnected ? 'Connect to engine to view components' : 'Loading components...'}
+            </div>
+        </div>
+    </div>
+    `;  
+  }
+
+
+
   _renderSystemsTab() {
     const engineConnected = !!this.devTools.world;
     
@@ -319,70 +411,26 @@ export class DevToolsRenderer {
     `;
   }
 
-  _renderPerformanceTab() {
+
+  _renderEventsTab() {
+    const engineConnected = !!this.devTools.world;
+
+
     return `
-        <div class="tab-content" id="performance-tab">
-            <div class="performance-header">
-                <h3>Performance Monitoring</h3>
-                <div class="perf-controls">
-                    <button id="start-recording">Start Recording</button>
-                    <button id="clear-data">Clear Data</button>
+        <div class="tab-content" id="events-tab">
+            <div class="events-header">
+                <h3>Event Listeners</h3>
+                <div class="events-tools">
+                    <button id="refresh-events" ${!engineConnected ? 'disabled' : ''}>Refresh</button>
                 </div>
             </div>
             
-            <div class="perf-charts">
-                <div class="chart-container">
-                    <h4>FPS</h4>
-                    <canvas id="fps-chart" height="100"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h4>Memory Usage</h4>
-                    <canvas id="memory-chart" height="100"></canvas>
-                </div>
-            </div>
-            
-            <div class="perf-metrics">
-                <div class="metric-card">
-                    <div class="metric-title">Average FPS</div>
-                    <div class="metric-value" id="avg-fps">0</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-title">Min FPS</div>
-                    <div class="metric-value" id="min-fps">0</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-title">Max FPS</div>
-                    <div class="metric-value" id="max-fps">0</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-title">Current Memory</div>
-                    <div class="metric-value" id="current-memory">0 MB</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-title">Peak Memory</div>
-                    <div class="metric-value" id="peak-memory">0 MB</div>
-                </div>
-            </div>
-            
-            <div class="perf-table-container">
-                <h3>System Performance</h3>
-                <table class="perf-table">
-                    <thead>
-                        <tr>
-                            <th>System</th>
-                            <th>Avg. Execution Time</th>
-                            <th>Last Execution Time</th>
-                            <th>% of Frame</th>
-                        </tr>
-                    </thead>
-                    <tbody id="system-perf-list">
-                        <tr><td colspan="4">No performance data available</td></tr>
-                    </tbody>
-                </table>
+            <div class="events-list">
+                ${!engineConnected ? 'Connect to engine to view events' : 'Loading events...'}
             </div>
         </div>
     `;
-  }
+  }  
 
   _renderConsoleTab() {
     return `

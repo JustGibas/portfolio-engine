@@ -5,12 +5,6 @@
  */
 
 // Show the loading indicator 
-// Questions:
-// in new to code and js
-// - why are we starting with (function name)() what is this sintax mean?
-// - usaly i see just function name(){} and then call the function name()
-// - what do () do t a function?
-// Answer:
 console.info('App initialized...');
 (function showImmediateLoadingIndicator() {
   const loadingIndicator = document.createElement('div');
@@ -43,8 +37,6 @@ console.info('App initialized...');
       border-radius: 8px;
       box-shadow: 0 5px 15px var(--shadow-color, rgba(0,0,0,0.5));
       padding: 20px;
-
-
     }
     
     .loading-spinner {
@@ -69,48 +61,39 @@ console.info('App initialized...');
 // After showing the loading indicator, start loading
 setTimeout(async () => {
   try {
-
-    //setTimeout(async () => {
+    // ======================================================================
+    // PHASE 1: Initialize DevTools
+    // ======================================================================
+    console.info('PHASE 1 Start: Initialize DevTools');
     try {
-      
-    // ======================================================================
-    // PHASE 1:
-    // ======================================================================
-    // Add Devtools
-    console.info('PHASE 1 Start');
-    console.info('Adding DevTools');
-    const { DevTools } = await import('./engine/modules/dev-tools/dev-tools.js');
-    const devTools = new DevTools(); // Initialize the DevTools instance
-
-    // error handling
+      const { DevTools } = await import('./engine/modules/dev-tools/dev-tools.js');
+      const devTools = new DevTools(); // Initialize the DevTools instance
+      window.devTools = devTools; // Make accessible globally for debugging
     } catch (error) {
       console.info('Dev tools failed to load:', error);
-      throw error; // Rethrow to handle in the main catch block
+      // Continue execution - DevTools are optional
     }
-    console.info('PHASE 1 End');
+    console.info('PHASE 1 End: DevTools initialization complete');
     
-  //},50);
-  
     // ======================================================================
-    // PHASE 1: PREPARE THE ENVIRONMENT
+    // PHASE 2: Initialize Engine
     // ======================================================================
-    // Start the engine
-    console.info('PHASE 2 Start');
-    console.info('Step 1 Start');
+    console.info('PHASE 2 Start: Initialize Engine');
     const { startEngine } = await import('./engine/start.js');
     const portfolio = await startEngine();
     
-    console.info('Step 1 End');
-    console.info('Step 2 Start');
+    // ======================================================================
+    // PHASE 3: Start Engine and Navigate
+    // ======================================================================
+    console.info('PHASE 3 Start: Start Engine and Navigate');
     // Start the engine and load the initial page
     portfolio.start();
     
-    // Navigate to the learn page for testing
-    window.location.hash = 'learn';
+    // Navigate to the home page
+    window.location.hash = 'home';
     
-    console.info('Step 2 End');
+    console.info('PHASE 3 End: Engine running and navigation initiated');
     
-    // error handling
   } catch (error) {
     console.error('Failed to start:', error);
     const loadingContent = document.querySelector('.loading-content');
@@ -127,10 +110,8 @@ setTimeout(async () => {
       `;
     }
   }
-  console.info('PHASE 2 End');
 
-
-  console.info('App End');
+  console.info('App initialization complete');
 }, 50);
 
 console.info('App.js End');

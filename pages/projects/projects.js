@@ -2,69 +2,81 @@
  * @fileoverview Projects Page
  * 
  * This module defines the structure and content of the Projects page,
- * showing a collection of projects discovered by ResourceDiscoverySystem.
- * 
- * @module projects
+ * showing a collection of projects.
  */
-import { cssLoader } from '../../engine/utils/css-loader.js';
-import config from '../../config.js';
+import { cssLoader } from '../../engine/modules/css-loader.js';
 
-const projects = {
+const projectsPage = {
   // Content data for the projects page
   content: {
     title: "My Projects",
     intro: "Here's a selection of projects I've worked on. Each project demonstrates different skills and technologies."
   },
   
-  // Initialize the projects page
+  // Sample projects data (in a real app, this would come from a database or API)
+  projects: [
+    {
+      id: "portfolio-engine",
+      title: "Portfolio Engine",
+      description: "A component-based engine for creating interactive portfolios with minimal configuration.",
+      image: "/assets/images/placeholder.jpg",
+      technologies: ["JavaScript", "CSS", "HTML", "ECS"],
+      link: "#portfolio-engine"
+    },
+    {
+      id: "task-scheduler",
+      title: "Task Scheduler System",
+      description: "A robust task scheduling system with dependency management and priority handling.",
+      image: "/assets/images/placeholder.jpg",
+      technologies: ["JavaScript", "Promise API", "Async/Await"],
+      link: "#task-scheduler"
+    },
+    {
+      id: "theme-manager",
+      title: "Theme Manager",
+      description: "A theming system that supports light, dark, and custom themes with dynamic switching.",
+      image: "/assets/images/placeholder.jpg",
+      technologies: ["CSS Variables", "JavaScript", "LocalStorage"],
+      link: "#theme-manager"
+    }
+  ],
+  
+  /**
+   * Initialize the projects page
+   * @param {Object} entity - The entity representing this page
+   */
   async init(entity) {
     this.entity = entity;
-    this.ecs = entity.ecs;
-    this.projects = [];
+    this.world = entity.world || window.portfolioEngine?.world;
     
     // Load CSS specific to this module
     try {
       await cssLoader.loadLocalCSS(import.meta.url);
+      console.info('Projects page CSS loaded');
     } catch (error) {
       console.warn('Failed to load projects page CSS:', error);
     }
     
     // Get the container from the entity
-    const container = entity.getComponent('dom')?.container;
+    const container = entity.getComponent?.('domElement')?.container || 
+                      entity.getComponent?.('dom')?.container ||
+                      document.querySelector('.page-container');
     
-    // Load projects
-    try {
-      await this._loadProjects();
-    } catch (error) {
-      console.error('Failed to load projects:', error);
+    if (!container) {
+      console.error('Projects page: Container not found');
+      return this;
     }
     
-    // Render if container exists
-    if (container) {
-      this.render(container);
-    }
+    // Render the page content
+    this.render(container);
     
     return this;
   },
   
-  // Load projects from page module or config
-  async _loadProjects() {
-    // Try to get projects from page module
-    try {
-      const pageModule = this.ecs?.getSystem('module')?.getModuleInstance('page');
-      if (pageModule) {
-        this.projects = await pageModule.instance.getProjects();
-        return;
-      }
-    } catch (error) {
-      console.warn('Failed to load projects from page module:', error);
-    }
-    
-    // Fallback to config
-    this.projects = config.projects || [];
-  },
-  
-  // Render the projects page content
+  /**
+   * Render the projects page content
+   * @param {HTMLElement} container - The container to render into
+   */
   render(container) {
     if (!container) return;
     
@@ -86,7 +98,11 @@ const projects = {
     this._addEventListeners(container);
   },
   
-  // Render project cards HTML
+  /**
+   * Render project cards HTML
+   * @private
+   * @returns {string} HTML for project cards
+   */
   _renderProjectCards() {
     if (!this.projects || this.projects.length === 0) {
       return '<p class="no-projects">No projects found.</p>';
@@ -95,7 +111,7 @@ const projects = {
     return this.projects.map(project => `
       <div class="project-card" data-project-id="${project.id}">
         <div class="project-image">
-          <img src="${project.image}" alt="${project.title}" onerror="this.src='assets/images/placeholder-project.jpg'">
+          <img src="${project.image}" alt="${project.title}" onerror="this.src='assets/images/placeholder.jpg'">
         </div>
         <div class="project-info">
           <h3>${project.title}</h3>
@@ -111,7 +127,11 @@ const projects = {
     `).join('');
   },
   
-  // Add event listeners to project elements
+  /**
+   * Add event listeners to project elements
+   * @private
+   * @param {HTMLElement} container - The container with project elements
+   */
   _addEventListeners(container) {
     const projectCards = container.querySelectorAll('.project-card');
     projectCards.forEach(card => {
@@ -125,34 +145,40 @@ const projects = {
     });
   },
   
-  // Show detailed view of a project
+  /**
+   * Show detailed view of a project
+   * @private
+   * @param {string} projectId - The ID of the project to show
+   */
   _showProjectDetails(projectId) {
     const project = this.projects.find(p => p.id === projectId);
     if (!project) return;
     
-    // In a real implementation, this would display a modal or navigate to a detail page
-    console.info(`Showing details for project: ${project.title}`);
-    
     // Navigate to project detail page if available
-    window.location.hash = project.link;
+    window.location.hash = project.link.substring(1);
   },
   
-  // Helper to truncate text to a specific length
+  /**
+   * Helper to truncate text to a specific length
+   * @private
+   * @param {string} text - The text to truncate
+   * @param {number} maxLength - Maximum length before truncation
+   * @returns {string} Truncated text
+   */
   _truncateText(text, maxLength) {
     if (!text) return '';
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   },
   
-  // Lifecycle methods for the page module system
+  // Lifecycle methods
   mount() {
     console.info('Projects page mounted');
   },
   
   unmount() {
-    // Clean up event listeners if needed
     console.info('Projects page unmounted');
   }
 };
 
-export { projects };
+export default projectsPage;

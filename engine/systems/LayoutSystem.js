@@ -5,16 +5,15 @@
  * Consolidates functionality from the previous LayoutSystem and LayoutInitializerSystem.
  */
 import { System } from '../core/system.js';
-
-
-//error making code parts:
-//import { Header } from '../elements/header/header.js';
+import { Header } from '../elements/header/header.js';
 //import { footer } from '../elements/footer/footer.js';
+// Import the enhanced container component functionality
+import { UI_CONTAINER, addChildToContainer, createContainerComponent } from '../components/container.js';
 
 // Component Types
 const LAYOUT = 'layout';
 const DOM_ELEMENT = 'domElement';
-const UI_CONTAINER = 'uiContainer';
+// UI_CONTAINER is now imported from container.js
 const UI_ELEMENT = 'uiElement';
 
 /**
@@ -26,7 +25,7 @@ class LayoutSystem extends System {
       super.init(world);
       
       // Debug log to understand initialization
-      console.log('LayoutSystem initialization started - learning exercise');
+      console.log('LayoutSystem initialization started');
       
       this.layoutInitialized = false;
       this.domMapping = new Map(); // DOM element -> entityId
@@ -35,37 +34,8 @@ class LayoutSystem extends System {
       this.processedFooters = new Set();
       this.updateCount = 0;
       
-      // Get scheduler - try multiple access methods
-      let scheduler = null;
-      if (typeof this.world.getScheduler === 'function') {
-        scheduler = this.world.getScheduler();
-      } else if (this.world.scheduler) {
-        scheduler = this.world.scheduler;
-      } else if (this.world.systemManager && typeof this.world.systemManager.getScheduler === 'function') {
-        scheduler = this.world.systemManager.getScheduler();
-      }
-      
-      if (scheduler) {
-        try {
-          // Try to get existing group first
-          let group = scheduler.getGroup('normal');
-          
-          // Create group if needed
-          if (!group) {
-            group = scheduler.createGroup('normal', 0);
-          }
-          
-          // Add this system to the group
-          if (group) {
-            group.addSystem(this);
-          }
-        } catch (error) {
-          // Just log the error and continue - system will still work
-          console.warn('LayoutSystem: Could not register with scheduler:', error);
-        }
-      } else {
-        console.info('LayoutSystem: No scheduler available, using direct update');
-      }
+      // Remove scheduler integration to avoid errors
+      // We'll implement a simpler task system later
       
       console.info('LayoutSystem: Initialized');
       return this;
@@ -537,6 +507,184 @@ class LayoutSystem extends System {
     
     console.log('Created button entity with ID:', buttonEntityId);
     return buttonEntityId;
+  }
+
+  /**
+   * Creates a dropdown entity and adds it to a container entity
+   * @param {number} containerEntityId - The entity ID of the container
+   * @param {Object} options - Dropdown options
+   * @param {string} [options.triggerSelector='.dropdown-trigger'] - Selector for trigger element
+   * @param {string} [options.position='bottom-right'] - Dropdown position
+   * @param {boolean} [options.closeOnClickOutside=true] - Whether to close on outside click
+   * @returns {number} The entity ID of the created dropdown
+   */
+  createDropdownInContainer(containerEntityId, options = {}) {
+    // Verify container exists and has the container component
+    const container = this.world.getComponent(containerEntityId, UI_CONTAINER);
+    const containerDomElement = this.world.getComponent(containerEntityId, DOM_ELEMENT);
+    
+    if (!container || !containerDomElement || !containerDomElement.element) {
+      console.warn(`Cannot create dropdown: Invalid container entity ${containerEntityId}`);
+      return null;
+    }
+    
+    // Create dropdown entity
+    const dropdownEntityId = this.world.createEntity();
+    
+    // Create the dropdown element
+    const dropdownElement = document.createElement('div');
+    dropdownElement.className = 'header-dropdown';
+    dropdownElement.setAttribute('role', 'menu');
+    dropdownElement.setAttribute('aria-hidden', 'true');
+    dropdownElement.style.display = 'none';
+    
+    // Find or create trigger element
+    let triggerElement;
+    const triggerSelector = options.triggerSelector || '.dropdown-trigger';
+    triggerElement = containerDomElement.element.querySelector(triggerSelector);
+    
+    if (!triggerElement) {
+      // Create a trigger button if none exists
+      triggerElement = document.createElement('button');
+      triggerElement.className = 'dropdown-trigger';
+      triggerElement.setAttribute('aria-label', 'Toggle dropdown');
+      triggerElement.innerHTML = '☰';
+      containerDomElement.element.appendChild(triggerElement);
+    }
+    
+    // Set up accessibility attributes
+    triggerElement.setAttribute('aria-haspopup', 'true');
+    triggerElement.setAttribute('aria-expanded', 'false');
+    const triggerId = triggerElement.id || `dropdown-trigger-${dropdownEntityId}`;
+    triggerElement.id = triggerId;
+    dropdownElement.setAttribute('aria-labelledby', triggerId);
+    
+    // Add the dropdown element to the container's DOM element
+    containerDomElement.element.appendChild(dropdownElement);
+    
+    // Add components to the entity
+    this.world.addComponent(dropdownEntityId, DOM_ELEMENT, {
+      element: dropdownElement,
+      triggerElement: triggerElement,
+      parentEntityId: containerEntityId
+    });
+    
+    // Add UI_ELEMENT component for updates
+    this.world.addComponent(dropdownEntityId, UI_ELEMENT, {
+      needsUpdate: false
+    });
+    
+    // Add dropdown-specific component
+    this.world.addComponent(dropdownEntityId, 'dropdown', {
+      isOpen: false,
+      position: options.position || 'bottom-right',
+      closeOnClickOutside: options.closeOnClickOutside !== false,
+      sections: []
+    });
+    
+    // Create container component so it can have child sections
+    this.world.addComponent(dropdownEntityId, UI_CONTAINER, 
+      createContainerComponent({
+        layout: 'vertical',
+        style: { 
+          padding: '8px 0',
+          minWidth: '200px'
+        }
+      })
+    );
+    
+    // Set up the click handler for the trigger
+    triggerElement.addEventListener('click', (e) => {
+      e.preventDefault();
+      this._toggleDropdown(dropdownEntityId);
+    });
+    
+    // Set up outside click handler if needed
+    if (options.closeOnClickOutside !== false) {
+      document.addEventListener('click', (e) => {
+        const dropdown = this.world.getComponent(dropdownEntityId, 'dropdown');
+        if (dropdown && dropdown.isOpen && 
+            !dropdownElement.contains(e.target) &&
+            triggerElement !== e.target &&
+            !triggerElement.contains(e.target)) {
+          this._closeDropdown(dropdownEntityId);
+        }
+      });
+    }
+    
+    // Add to container's children
+    addChildToContainer(this.world, containerEntityId, dropdownEntityId);
+    
+    console.info(`Created dropdown entity ${dropdownEntityId} in container ${containerEntityId}`);
+    return dropdownEntityId;
+  }
+  
+  /**
+   * Toggle dropdown visibility
+   * @param {number} dropdownEntityId - Dropdown entity ID
+   * @private
+   */
+  _toggleDropdown(dropdownEntityId) {
+    const dropdown = this.world.getComponent(dropdownEntityId, 'dropdown');
+    if (!dropdown) return;
+    
+    if (dropdown.isOpen) {
+      this._closeDropdown(dropdownEntityId);
+    } else {
+      this._openDropdown(dropdownEntityId);
+    }
+  }
+  
+  /**
+   * Open a dropdown
+   * @param {number} dropdownEntityId - Dropdown entity ID
+   * @private
+   */
+  _openDropdown(dropdownEntityId) {
+    const dropdown = this.world.getComponent(dropdownEntityId, 'dropdown');
+    const domElement = this.world.getComponent(dropdownEntityId, DOM_ELEMENT);
+    
+    if (!dropdown || !domElement || !domElement.element) return;
+    
+    domElement.element.style.display = 'block';
+    dropdown.isOpen = true;
+    
+    // Update ARIA attributes
+    domElement.element.setAttribute('aria-hidden', 'false');
+    if (domElement.triggerElement) {
+      domElement.triggerElement.setAttribute('aria-expanded', 'true');
+    }
+    
+    // Add visible class after small delay for transition
+    setTimeout(() => {
+      domElement.element.classList.add('dropdown-visible');
+    }, 10);
+  }
+  
+  /**
+   * Close a dropdown
+   * @param {number} dropdownEntityId - Dropdown entity ID
+   * @private
+   */
+  _closeDropdown(dropdownEntityId) {
+    const dropdown = this.world.getComponent(dropdownEntityId, 'dropdown');
+    const domElement = this.world.getComponent(dropdownEntityId, DOM_ELEMENT);
+    
+    if (!dropdown || !domElement || !domElement.element) return;
+    
+    domElement.element.classList.remove('dropdown-visible');
+    dropdown.isOpen = false;
+    
+    // Update ARIA attributes
+    domElement.element.setAttribute('aria-hidden', 'true');
+    if (domElement.triggerElement) {
+      domElement.triggerElement.setAttribute('aria-expanded', 'false');
+    }
+    
+    // Hide after transition completes
+    setTimeout(() => {
+      domElement.element.style.display = 'none';
+    }, 150);
   }
 }
 

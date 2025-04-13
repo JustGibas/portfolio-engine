@@ -1,11 +1,9 @@
-app.js:14 App initialized...
-app.js:136 App.js End
-app.js:80 PHASE 1 Start
-app.js:81 Adding DevTools
+app.js:8 App initialized...
+app.js:117 App.js End
+app.js:67 PHASE 1 Start: Initialize DevTools
 dev-tools.js:11 DevTools initialized...
-app.js:90 PHASE 1 End
-app.js:98 PHASE 2 Start
-app.js:99 Step 1 Start
+app.js:76 PHASE 1 End: DevTools initialization complete
+app.js:81 PHASE 2 Start: Initialize Engine
 dev-tools.js:145 DevTools ready
 start.js:17 Starting Portfolio Engine...
 world.js:33 World: Created
@@ -20,78 +18,86 @@ start.js:64  Component part
 start.js:90  System part 
 eventSystem.js:41 EventSystem: Initialized
 renderSystem.js:14 RenderSystem: Initialized
-pageSystem.js:24 PageSystem: Initialized
-layoutSystem.js:29 LayoutSystem initialization started - learning exercise
-layoutSystem.js:64 LayoutSystem: Could not register with scheduler: TypeError: scheduler.getGroup is not a function
-    at LayoutSystem.init (layoutSystem.js:51:33)
-    at startEngine (start.js:121:18)
-    at async app.js:101:23
-init @ layoutSystem.js:64
-startEngine @ start.js:121
-await in startEngine
-(anonymous) @ app.js:101
-setTimeout
-(anonymous) @ app.js:70
-layoutSystem.js:70 LayoutSystem: Initialized
-start.js:204 Engine startup complete!
-app.js:103 Step 1 End
-app.js:104 Step 2 Start
-start.js:143 Engine starting...
+module.js:91 CSSLoader: Module created
+pageSystem.js:26 PageSystem: Initialized
+layoutSystem.js:28 LayoutSystem initialization started
+layoutSystem.js:40 LayoutSystem: Initialized
+taskSystem.js:150 TaskSystem: Initialized
+start.js:220 Engine startup complete!
+app.js:88 PHASE 3 Start: Start Engine and Navigate
+start.js:159 Engine starting...
 loop.js:67 EngineLoop: Starting loop
-pageSystem.js:51 PageSystem: Navigating to route "learn"
-app.js:111 Step 2 End
-app.js:130 PHASE 2 End
-app.js:133 App End
-layoutSystem.js:127 LayoutSystem: Creating header element
-layoutSystem.js:149 LayoutSystem: Header entity created
-layoutSystem.js:538 Created button entity with ID: 8
-layoutSystem.js:538 Created button entity with ID: 10
-learn.js:128 Button demo setup complete
-learn.js:244 Component demo setup complete with entity ID: 12
-eventSystem.js:288 EventSystem: Debug mode disabled
-learn.js:329 Event demo setup complete
-learn.js:334 Learn page mounted
-pageSystem.js:151 PageSystem: Loaded page "learn"
-layoutSystem.js:89 LayoutSystem: Falling back to direct DOM initialization
-update @ layoutSystem.js:89
+pageSystem.js:53 PageSystem: Navigating to route "contact"
+app.js:95 PHASE 3 End: Engine running and navigation initiated
+app.js:114 App initialization complete
+pageSystem.js:53 PageSystem: Navigating to route "home"
+layoutSystem.js:97 LayoutSystem: Creating header element
+layoutSystem.js:119 LayoutSystem: Header entity created
+layoutSystem.js:59 LayoutSystem: Falling back to direct DOM initialization
+update @ layoutSystem.js:59
+_perform @ task.js:221
+execute @ task.js:105
+execute @ taskSystem.js:101
+await in execute
+update @ taskSystem.js:283
 _updateSystems @ loop.js:281
-_fixedUpdate @ loop.js:232
-_update @ loop.js:204
+_variableUpdate @ loop.js:253
+_update @ loop.js:213
 _rafCallback @ loop.js:166
 requestAnimationFrame
 _rafCallback @ loop.js:167
 requestAnimationFrame
-_rafCallback @ loop.js:167
-requestAnimationFrame
-_rafCallback @ loop.js:167
-requestAnimationFrame
 start @ loop.js:73
-start @ start.js:145
-(anonymous) @ app.js:106
+start @ start.js:161
+(anonymous) @ app.js:90
 setTimeout
-(anonymous) @ app.js:70
-layoutSystem.js:269 Uncaught ReferenceError: Header is not defined
-    at LayoutSystem._initializeDirectFromDOM (layoutSystem.js:269:25)
-    at LayoutSystem.update (layoutSystem.js:90:12)
-    at EngineLoop._updateSystems (loop.js:281:18)
-    at EngineLoop._fixedUpdate (loop.js:232:10)
-    at EngineLoop._update (loop.js:204:12)
-    at EngineLoop._rafCallback (loop.js:166:10)
-_initializeDirectFromDOM @ layoutSystem.js:269
-update @ layoutSystem.js:90
-_updateSystems @ loop.js:281
-_fixedUpdate @ loop.js:232
-_update @ loop.js:204
-_rafCallback @ loop.js:166
-requestAnimationFrame
-_rafCallback @ loop.js:167
-requestAnimationFrame
-_rafCallback @ loop.js:167
-requestAnimationFrame
-_rafCallback @ loop.js:167
-requestAnimationFrame
-start @ loop.js:73
-start @ start.js:145
-(anonymous) @ app.js:106
+(anonymous) @ app.js:62
+pageSystem.js:102 
+            
+            
+           GET http://127.0.0.1:5501/pages/contact/contact.js net::ERR_ABORTED 404 (Not Found)
+loadPage @ pageSystem.js:102
+_handleRouteChange @ pageSystem.js:54
+start @ pageSystem.js:35
+start @ start.js:167
+(anonymous) @ app.js:90
 setTimeout
-(anonymous) @ app.js:70
+(anonymous) @ app.js:62
+pageSystem.js:183 PageSystem: Failed to load page "contact": TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5501/pages/contact/contact.js
+loadPage @ pageSystem.js:183
+await in loadPage
+_handleRouteChange @ pageSystem.js:54
+start @ pageSystem.js:35
+start @ start.js:167
+(anonymous) @ app.js:90
+setTimeout
+(anonymous) @ app.js:62
+home.js:22 HomePage: Neither engine nor world provided to constructor
+HomePage @ home.js:22
+loadPage @ pageSystem.js:109
+await in loadPage
+_handleRouteChange @ pageSystem.js:54
+hashchange
+(anonymous) @ app.js:93
+setTimeout
+(anonymous) @ app.js:62
+css-loader.js:63 CSS Loader: Loaded http://127.0.0.1:5501/engine/elements/header/header.css
+header.js:384 Basic theme selector initialized
+header.js:471 Added theme section to dropdown
+header.js:125 Header initialized with configured modules
+css-loader.js:63 CSS Loader: Loaded /pages/home/home.css
+css-loader.js:63 CSS Loader: Loaded http://127.0.0.1:5501/engine/elements/dropdown/dropdown.css
+dropdown.js:150 Dropdown CSS loaded successfully
+css-loader.js:63 CSS Loader: Loaded http://127.0.0.1:5501/pages/home/home.css
+home.js:33 Home page CSS loaded
+pageSystem.js:183 PageSystem: Failed to load page "home": TypeError: Cannot read properties of undefined (reading 'getElementEntity')
+    at HomePage._createPageStructure (home.js:49:45)
+    at HomePage.init (home.js:39:16)
+    at async PageSystem.loadPage (pageSystem.js:156:11)
+loadPage @ pageSystem.js:183
+await in loadPage
+_handleRouteChange @ pageSystem.js:54
+hashchange
+(anonymous) @ app.js:93
+setTimeout
+(anonymous) @ app.js:62

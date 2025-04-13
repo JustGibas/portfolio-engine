@@ -21,7 +21,6 @@
  * - Load your own dependencies (like CSS)
  */
 import { cssLoader } from '../../utils/css-loader.js';
-import config from '../../../config.js';
 
 // Simple singleton implementation for theme selector
 const themeSelector = {

@@ -1,20 +1,18 @@
 /**
  * @fileoverview Main Header Component
  * 
- * A configurable header component that can be positioned at various locations
+ * A header component that can be positioned at various locations
  * on the screen (top, bottom, left, right) and serves as a container for 
  * multiple UI modules like navigation, dropdown menus and theme selectors.
  * 
  * ARCHITECTURAL DESIGN:
  * This header implements a composable container pattern where:
  * 
- * 1. The Header creates the DOM structure based on configuration
+ * 1. The Header creates the DOM structure
  * 2. It provides mount points for child modules (navbar, theme selector, etc)
  * 3. Each child module is responsible for its own rendering and behavior
- * 4. Configuration can be provided via config file or directly as options
  * 
  * EXTENSIBILITY:
- * - New UI elements can be added via configuration without changing code
  * - Additional dropdown sections can be registered at runtime
  * - Fallback mechanisms ensure core functionality even when components fail
  * 
@@ -22,10 +20,10 @@
  * to different contexts and remain resilient to failures.
  */
 import { cssLoader } from '../../modules/css-loader.js';
-import { Navbar } from '../navbar/navbar.js';
+import { Navbar } from '../navigation/navbar.js';
+//import { Hotbar } from '../hotbar/hotbar.js';
 import { HeaderDropdown } from '../dropdown/dropdown.js';
-import { ThemeSelector } from '../../modules/theme-selector/theme-selector.js';
-import { registerDefaultDropdownSections } from '../dropdown/dropdown-manager.js';
+//import { ThemeSelector } from '../../modules/theme-selector/theme-selector.js';
 
 class Header {
   /**
@@ -33,12 +31,14 @@ class Header {
    * @param {Object} options - Configuration options
    * @param {HTMLElement} options.container - Header container element
    * @param {Object} options.ecs - ECS instance for creating subentities
-   * @param {Object} options.headerConfig - Custom header configuration
+   
    */
   constructor(options = {}) {
     this.options = Object.assign({
       container: null,
+      // in engine we use world
       ecs: null,
+      // headerConfig: depricated
       headerConfig: null
     }, options);
     
@@ -56,12 +56,7 @@ class Header {
     // Initialize with a default configuration first to ensure it exists
     this.headerConfig = this._getDefaultHeaderConfig();
     
-    // Then try to override with user config if available
-    if (this.options.headerConfig) {
-      this.headerConfig = this.options.headerConfig;
-    } else if (config.uiModules?.header) {
-      this.headerConfig = config.uiModules.header;
-    }
+    
     
     // Ensure sections array exists
     if (!this.headerConfig.sections || !Array.isArray(this.headerConfig.sections)) {
@@ -84,7 +79,7 @@ class Header {
           type: 'container',
           className: 'header-content', 
           children: [
-            { id: 'title', type: 'title', text: config.site?.title || 'Portfolio' },
+            { id: 'title', type: 'title', text: String(this.id) || 'Portfolio' },
             { id: 'navbar', type: 'navigation', className: 'header-navigation' },
             {
               id: 'controls',
@@ -121,10 +116,10 @@ class Header {
     await cssLoader.loadLocalCSS(import.meta.url);
     
     try {
-      // Create the header structure based on configuration
+      // Create the header structure
       this._createHeaderStructure();
       
-      // Initialize modules based on configuration
+      // Initialize modules
       await this._initializeModules();
       
       console.info('Header initialized with configured modules');
@@ -184,7 +179,7 @@ class Header {
     // Simple header structure without depending on configuration
     this.container.innerHTML = `
       <div class="header-content">
-        <h1>${config.site?.title || "Portfolio"}</h1>
+        <h1>Portfolio Engine</h1>
         <nav id="header-nav-container" class="header-navigation"></nav>
         <div class="header-controls">
           <div id="header-theme-container"></div>
@@ -194,6 +189,14 @@ class Header {
         </div>
       </div>
     `;
+    
+    // Make title clickable to navigate to home
+    const title = this.container.querySelector('h1');
+    if (title) {
+      title.addEventListener('click', () => {
+        window.location.hash = '';
+      });
+    }
     
     this.navContainer = this.container.querySelector('#header-nav-container');
     this.themeContainer = this.container.querySelector('#header-theme-container');
@@ -259,7 +262,12 @@ class Header {
         
       case 'title':
         element = document.createElement('h1');
-        element.textContent = sectionConfig.text;
+        element.textContent = "Portfolio Engine";
+        
+        // Make title clickable to navigate to home
+        element.addEventListener('click', () => {
+          window.location.hash = '';
+        });
         break;
         
       case 'navigation':
@@ -345,50 +353,8 @@ class Header {
    * @private
    */
   async _initializeThemeSelector(container) {
-    try {
-      // Check if ECS is properly initialized and has the required methods
-      const isEcsValid = this.ecs && 
-                        typeof this.ecs.createEntity === 'function' && 
-                        this.ecs.createEntity() && 
-                        typeof this.ecs.createEntity().addComponent === 'function';
-      
-      if (isEcsValid) {
-        // Use ECS integration approach
-        const themeEntity = this.ecs.createEntity();
-        themeEntity.addComponent('dom', { container });
-        themeEntity.addComponent('theme', { 
-          currentTheme: localStorage.getItem('portfolioTheme') || config.theme?.default 
-        });
-        
-        // Initialize theme selector using the singleton
-        if (window.themeSelector && typeof window.themeSelector.init === 'function') {
-          await window.themeSelector.init(themeEntity);
-        } else {
-          // Import theme selector dynamically if not already available
-          const module = await import('../../modules/theme-selector/theme-selector.js');
-          if (module.themeSelector && typeof module.themeSelector.init === 'function') {
-            await module.themeSelector.init(themeEntity);
-          }
-        }
-        this.themeEntity = themeEntity;
-      } else {
-        // Use standalone approach
-        const module = await import('../../modules/theme-selector/theme-selector.js');
-        if (module.ThemeSelector) {
-          const standaloneThemeSelector = new module.ThemeSelector({
-            container,
-            currentTheme: localStorage.getItem('portfolioTheme') || config.theme?.default,
-            availableThemes: config.theme?.availableThemes
-          });
-          standaloneThemeSelector.render();
-          this.modules.set('theme', standaloneThemeSelector);
-        }
-      }
-    } catch (error) {
-      console.error('Error initializing theme selector:', error);
-      // Try a basic theme selector as last resort
-      this._initializeBasicThemeSelector(container);
-    }
+    // Implement a simple theme selector without external dependencies
+    this._initializeBasicThemeSelector(container);
   }
   
   /**
@@ -398,21 +364,37 @@ class Header {
    */
   _initializeBasicThemeSelector(container) {
     try {
+      // Get current theme from localStorage or default to light
       const currentTheme = localStorage.getItem('portfolioTheme') || 'light';
+      
+      // Set the theme on the document
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      
+      // Create a simple toggle button
       const button = document.createElement('button');
       button.className = 'theme-toggle-btn';
       button.innerHTML = currentTheme === 'dark' ? '☀️' : '🌙';
       button.setAttribute('aria-label', 'Toggle theme');
       
+      // Add click event
       button.addEventListener('click', () => {
         const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('portfolioTheme', newTheme);
         button.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+        
+        // Dispatch a theme change event
+        const event = new CustomEvent('theme:changed', { 
+          detail: { theme: newTheme } 
+        });
+        document.dispatchEvent(event);
       });
       
+      // Add the button to the container
       container.innerHTML = '';
       container.appendChild(button);
+      
+      console.info('Basic theme selector initialized');
     } catch (err) {
       console.error('Failed to initialize basic theme selector', err);
     }
@@ -444,42 +426,67 @@ class Header {
    */
   async _registerDropdownModules() {
     try {
-      // Create theme selector for dropdown
-      const themeSelector = new ThemeSelector({
-        onChange: (theme) => {
+      // Create a simple theme section for the dropdown
+      const themeSectionElement = document.createElement('div');
+      themeSectionElement.className = 'dropdown-section';
+      themeSectionElement.innerHTML = `
+        <h3>Theme</h3>
+        <div class="theme-options">
+          <button class="theme-option" data-theme="light">Light</button>
+          <button class="theme-option" data-theme="dark">Dark</button>
+        </div>
+      `;
+      
+      // Add event listeners to theme buttons
+      const themeButtons = themeSectionElement.querySelectorAll('.theme-option');
+      themeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const theme = button.getAttribute('data-theme');
           document.documentElement.setAttribute('data-theme', theme);
           localStorage.setItem('portfolioTheme', theme);
-        },
-        currentTheme: localStorage.getItem('portfolioTheme') || config.theme.default,
-        availableThemes: config.theme.availableThemes
+          
+          // Highlight the active theme
+          themeButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          
+          // Update the theme toggle button
+          const themeToggle = document.querySelector('.theme-toggle-btn');
+          if (themeToggle) {
+            themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+          }
+          
+          // Dispatch event
+          const event = new CustomEvent('theme:changed', { 
+            detail: { theme } 
+          });
+          document.dispatchEvent(event);
+          
+          // Close dropdown
+          if (this.dropdown) {
+            this.dropdown.close();
+          }
+        });
       });
       
-      // Add theme selector to dropdown
-      this.dropdown.addSection('themes', themeSelector);
-      
-      // Register default sections (settings and links)
-      registerDefaultDropdownSections(this.dropdown);
-      
-      // Load additional dropdown modules from config
-      if (this.headerConfig.dropdownModules && Array.isArray(this.headerConfig.dropdownModules)) {
-        for (const moduleConfig of this.headerConfig.dropdownModules) {
-          try {
-            if (moduleConfig.id === 'devtools' && config.advanced?.debug) {
-              const { DevToolsSection } = await import('../dropdown/devtools/devtools.js');
-              const devTools = new DevToolsSection();
-              this.dropdown.addSection('devtools', devTools);
-            } else if (moduleConfig.path) {
-              // Dynamic import of custom modules
-              const module = await import(moduleConfig.path);
-              if (module.default && typeof module.default.render === 'function') {
-                this.dropdown.addSection(moduleConfig.id, module.default);
-              }
-            }
-          } catch (err) {
-            console.warn(`Failed to load dropdown module ${moduleConfig.id}:`, err);
-          }
-        }
+      // Highlight current theme
+      const currentTheme = localStorage.getItem('portfolioTheme') || 'light';
+      const activeButton = themeSectionElement.querySelector(`[data-theme="${currentTheme}"]`);
+      if (activeButton) {
+        activeButton.classList.add('active');
       }
+      
+      // Add the section to dropdown
+      if (this.dropdown && this.dropdown.addSection) {
+        this.dropdown.addSection('themes', {
+          render: () => themeSectionElement
+        });
+        
+        console.info('Added theme section to dropdown');
+      }
+      
+      // Skip further registrations for now
+      // We'll implement these properly later
+      
     } catch (error) {
       console.error('Failed to register dropdown modules:', error);
     }

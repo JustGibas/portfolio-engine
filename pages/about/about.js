@@ -4,62 +4,64 @@
  * This module defines the structure and content of the About page.
  * Content is primarily loaded from config.js to ensure consistency
  * across the application.
- * 
- * @module about
- * @requires config from ../../config.js
  */
-import config from '../../config.js';
-import { cssLoader } from '../../engine/utils/css-loader.js';
+import { cssLoader } from '../../engine/modules/css-loader.js';
 
 // Page module implementation
-const about = {
-  // Content data populated from config
+const aboutPage = {
+  // Content data for the page
   content: {
     title: "About Me",
-    profileImage: config.assets?.userImages?.profile?.path || "assets/images/profile.png",
-    fallbackImage: config.assets?.userImages?.profile?.fallback || "https://via.placeholder.com/300x300.png?text=No+Image",
+    profileImage: "/assets/images/profile.png",
+    fallbackImage: "https://via.placeholder.com/300x300.png?text=No+Image",
     paragraphs: [
       "Welcome to my portfolio. I am a creative technologist with a passion for developing innovative solutions and pushing the boundaries of technology.",
       "With extensive experience in web development, interactive media, and software engineering, I specialize in creating engaging digital experiences that combine cutting-edge technology with intuitive design.",
       "My approach is rooted in a deep understanding of both technical implementation and user-centered design principles, allowing me to build solutions that are not only functionally robust but also enjoyable to use."
     ],
-    // Use site information from config
     details: {
-      name: config.site?.author || "Portfolio Author",
-      location: config.site?.location || "Location not specified",
-      email: config.site?.email || "Email not specified"
+      name: "Portfolio Author",
+      location: "Location not specified",
+      email: "email@example.com"
     }
   },
   
-  // Initialize the about page
+  /**
+   * Initialize the about page
+   * @param {Object} entity - The entity representing this page
+   */
   async init(entity) {
     this.entity = entity;
-    this.ecs = entity.ecs;
+    this.world = entity.world || window.portfolioEngine?.world;
     
     // Load CSS specific to this module
     try {
       await cssLoader.loadLocalCSS(import.meta.url);
+      console.info('About page CSS loaded');
     } catch (error) {
       console.warn('Failed to load about page CSS:', error);
     }
     
-    // Get container from entity or use DOM fallback
-    let container = entity.getComponent('dom')?.container;
+    // Get the container from the entity
+    const container = entity.getComponent?.('domElement')?.container || 
+                      entity.getComponent?.('dom')?.container ||
+                      document.querySelector('.page-container');
+    
     if (!container) {
-      container = document.querySelector('#about .section-container');
-      console.info('Fallback: Using container from DOM for about page.');
+      console.error('About page: Container not found');
+      return this;
     }
     
-    if (container) {
-      this.render(container);
-    } else {
-      console.error('About page container not found.');
-    }
+    // Render the page content
+    this.render(container);
     
     return this;
   },
   
-  // Render the about page content
+  /**
+   * Render the about page content
+   * @param {HTMLElement} container - The container to render into
+   */
   render(container) {
     if (!container) return;
     
@@ -89,7 +91,7 @@ const about = {
     `;
   },
   
-  // Lifecycle methods for the page module system
+  // Lifecycle methods
   mount() {
     console.info('About page mounted');
   },
@@ -99,4 +101,4 @@ const about = {
   }
 };
 
-export { about };
+export default aboutPage;
