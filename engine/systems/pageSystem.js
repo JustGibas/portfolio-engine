@@ -20,11 +20,34 @@ class PageSystem extends System {
     this.isInitialized = false;
     this.cssLoader = cssLoader; // Store reference to CSS loader
     
+    // Detect if we're running on GitHub Pages
+    this.basePath = this._getBasePath();
+    
     // Listen for hash changes to handle page navigation
     window.addEventListener('hashchange', this._handleRouteChange.bind(this));
     
     console.info('PageSystem: Initialized');
     return this;
+  }
+  
+  /**
+   * Get the base path for loading resources
+   * @private
+   */
+  _getBasePath() {
+    // Check if we're running on GitHub Pages
+    if (window.location.hostname.includes('github.io')) {
+      // Extract the repository name from URL
+      const pathParts = window.location.pathname.split('/');
+      const repoName = pathParts.length > 1 ? pathParts[1] : '';
+      
+      if (repoName) {
+        return `/${repoName}`;
+      }
+    }
+    
+    // Default to root path for local development
+    return '';
   }
   
   /**
@@ -98,8 +121,11 @@ class PageSystem extends System {
         let pageModule = this.pageModules.get(route);
         
         if (!pageModule) {
-          // Dynamically import the page module
-          const module = await import(`/pages/${route}/${route}.js`);
+          // Dynamically import the page module using the correct base path
+          const pagePath = `${this.basePath}/pages/${route}/${route}.js`;
+          console.info(`PageSystem: Loading page module from: ${pagePath}`);
+          
+          const module = await import(pagePath);
           
           // Handle different export formats (class or object)
           if (module.default) {
@@ -121,8 +147,8 @@ class PageSystem extends System {
           // Store for future use
           this.pageModules.set(route, pageModule);
           
-          // Automatically load corresponding CSS file
-          const cssPath = `/pages/${route}/${route}.css`;
+          // Automatically load corresponding CSS file using the correct base path
+          const cssPath = `${this.basePath}/pages/${route}/${route}.css`;
           await this.cssLoader.loadCSS(cssPath).catch(err => {
             console.warn(`CSS for page "${route}" not found or failed to load.`);
           });
