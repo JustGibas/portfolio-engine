@@ -3,45 +3,145 @@
  */
 
 :root {
-  --header-height: 60px; /* Standard header height - adjust as needed */
+  --header-height: 60px;
+  /* Using a different easing curve for collapse to create slow start then fast finish */
+  --header-collapse-transition: 0.6s cubic-bezier(0.25, 0.1, 0.6, 1.0); 
+  /* Using a different easing curve for expand to create fast start then slow finish */
+  --header-expand-transition: 0.5s cubic-bezier(0.34, 1.56, 0.94, 1); 
+  --bubble-size: 50px;
+  --bubble-color: var(--primary-color, #3498db);
+  --bubble-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .header {
-  background-color: var(--header-bg-color);
-  color: var(--text-color);
+  background-color: var(--header-bg-color, #fff);
+  color: var(--text-color, #333);
   padding: 1rem;
-  position: sticky;
+  position: fixed; /* Changed from sticky to fixed for consistent positioning */
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  transition: all var(--header-expand-transition); /* Default to expand transition */
+  overflow: hidden; /* To contain content during collapse */
+  box-sizing: border-box;
 }
 
+/* When collapsing to bubble - use faster transition */
+.header.collapsing-state {
+  transition: all var(--header-collapse-transition);
+}
+
+/* When expanding from bubble - use slower transition */
+.header.expanding-state {
+  transition: all var(--header-expand-transition);
+}
+
+/* States for collapsible header */
+.header.collapsed {
+  width: var(--bubble-size) !important;
+  height: var(--bubble-size) !important;
+  min-width: var(--bubble-size) !important;
+  max-width: var(--bubble-size) !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  position: fixed !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  left: auto !important; /* Override left:0 from default state */
+  cursor: pointer !important;
+  box-shadow: var(--bubble-shadow) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background-color: var(--bubble-color) !important; /* Use specific color for bubble */
+  transform: none !important; /* Reset any transforms */
+  color: #fff !important; /* Text color for the bubble icon */
+  margin: 0 !important;
+}
+
+.header.collapsed .header-content {
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+  visibility: hidden; /* Completely hide content in collapsed state */
+  position: absolute;
+  left: -9999px;
+}
+
+.header.collapsed::before {
+  content: '☰';
+  font-size: 1.5rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.header.collapsed:hover,
+.header.expanding {
+  width: 100% !important;
+  height: auto !important; 
+  min-width: unset !important;
+  max-width: unset !important;
+  border-radius: 0 !important;
+  padding: 1rem !important;
+  top: 0 !important;
+  right: 0 !important;
+  left: 0 !important; /* Restore left:0 for expanded state */
+  overflow: visible !important;
+  cursor: default !important;
+  background-color: var(--header-bg-color, #fff) !important; /* Restore original header color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.header.collapsed:hover::before,
+.header.expanding::before {
+  display: none !important;
+}
+
+.header.collapsed:hover .header-content,
+.header.expanding .header-content {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+  visibility: visible;
+  position: static;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s;
+}
+
+/* Header content transition */
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: var(--surface-color);
-  /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+  background-color: var(--surface-color, transparent);
   max-width: 1200px;
   margin: 0 auto;
   flex-wrap: wrap;
   width: 100%;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  opacity: 1;
+  transform: scale(1);
 }
 
-/* Make the title clickable and styled */
-.header-content h1 {
-  cursor: pointer;
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--primary-color);
-  transition: color 0.2s ease;
+/* Add a subtle animation to bubble when in collapsed state */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
-.header-content h1:hover {
-  color: var(--accent-color);
+.header.collapsed:not(:hover) {
+  animation: pulse 3s infinite ease-in-out;
 }
 
 /* Navigation styling */

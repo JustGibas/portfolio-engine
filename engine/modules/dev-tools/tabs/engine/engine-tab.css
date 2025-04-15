@@ -1,0 +1,138 @@
+/* Engine tab styles */
+.engine-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.control-group {
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.button-row, .control-row {
+    display: flex;
+    gap: 8px;
+}
+
+.control-button {
+    flex: 1;
+    min-width: 100px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-group label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+.input-group input[type="number"] {
+    width: 60px;
+    padding: 4px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+}
+
+.toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--border-color);
+    border-radius: 20px;
+    transition: 0.4s;
+}
+
+.toggle-switch .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--card-bg-color);
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: var(--primary-color);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
+
+.info-panel {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: var(--card-bg-color);
+}
+
+.info-panel pre {
+    margin: 0;
+    padding: 10px;
+    font-family: 'Fira Code', Consolas, Monaco, monospace;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+select {
+    padding: 4px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+    .button-row, .control-row {
+        flex-direction: column;
+    }
+    
+    .control-button {
+        width: 100%;
+    }
+    
+    .input-group {
+        flex-wrap: wrap;
+    }
+}

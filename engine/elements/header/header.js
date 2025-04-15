@@ -39,13 +39,21 @@ class Header {
       // in engine we use world
       ecs: null,
       // headerConfig: depricated
-      headerConfig: null
+      headerConfig: null,
+      // Animation configuration
+      autoCollapseDelay:3500, // Time in ms before auto-collapse
+      enableCollapse: true, // Whether to enable the collapsible behavior
+      initiallyCollapsed: false // Start collapsed or expanded
     }, options);
     
     this.container = this.options.container;
     this.ecs = this.options.ecs;
     this.dropdown = null;
     this.dropdownTrigger = null;
+    
+    // Animation state
+    this.isCollapsed = this.options.initiallyCollapsed;
+    this.collapseTimer = null;
     
     // Store references to module containers
     this.moduleContainers = new Map();
@@ -55,8 +63,6 @@ class Header {
     
     // Initialize with a default configuration first to ensure it exists
     this.headerConfig = this._getDefaultHeaderConfig();
-    
-    
     
     // Ensure sections array exists
     if (!this.headerConfig.sections || !Array.isArray(this.headerConfig.sections)) {
@@ -121,6 +127,11 @@ class Header {
       
       // Initialize modules
       await this._initializeModules();
+
+      // Initialize collapsible behavior if enabled
+      if (this.options.enableCollapse) {
+        this._initializeCollapseBehavior();
+      }
       
       console.info('Header initialized with configured modules');
     } catch (error) {
@@ -131,12 +142,242 @@ class Header {
       // Try to initialize basic modules even after fallback
       try {
         await this._initializeBasicModules();
+        
+        // Initialize collapsible behavior for fallback header too
+        if (this.options.enableCollapse) {
+          this._initializeCollapseBehavior();
+        }
       } catch (innerError) {
         console.error('Failed to initialize basic modules:', innerError);
       }
     }
     
     return this;
+  }
+  
+  /**
+   * Initialize collapsible header behavior with ECS integration
+   * @private
+   */
+  _initializeCollapseBehavior() {
+    // Set the initial state
+    if (this.isCollapsed) {
+      this.collapseHeader();
+    } else {
+      this.expandHeader();
+      this._startCollapseTimer();
+    }
+    
+    // Add event listeners for hover, touch, and click
+    this.container.addEventListener('mouseenter', () => this.expandHeader());
+    this.container.addEventListener('mouseleave', () => this._startCollapseTimer());
+    this.container.addEventListener('touchstart', (e) => {
+      if (this.isCollapsed) {
+        e.preventDefault(); // Prevent default only when collapsed
+        this.expandHeader();
+      } else {
+        this._startCollapseTimer();
+      }
+    });
+    
+    // When collapsed, click expands
+    this.container.addEventListener('click', (e) => {
+      if (this.isCollapsed) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.expandHeader();
+      }
+    });
+    
+    // Document-level click handler to collapse when clicking elsewhere
+    document.addEventListener('click', (e) => {
+      if (!this.isCollapsed && !this.container.contains(e.target)) {
+        this.collapseHeader();
+      }
+    });
+    
+    // Add ECS integration if available
+    if (this.ecs) {
+      this._registerHeaderAnimationComponent();
+    }
+  }
+  
+  /**
+   * Register header animation component with the ECS system
+   * @private
+   */
+  _registerHeaderAnimationComponent() {
+    // Create animation component for the header if animation system exists
+    if (this.ecs.getSystem('animationSystem')) {
+      // Get entity ID or create a new entity for the header
+      const headerEntityId = this.container.getAttribute('data-entity-id') || 
+                           this.ecs.createEntity('header');
+                           
+      // Add or update the animation component
+      this.ecs.addComponent(headerEntityId, 'animation', {
+        element: this.container,
+        properties: {
+          collapsed: this.isCollapsed,
+          expanding: false,
+          lastInteraction: Date.now()
+        },
+        transitions: {
+          // Update easing functions to match our CSS transitions
+          toCollapsed: { duration: 600, easing: 'cubic-bezier(0.25, 0.1, 0.6, 1.0)' },
+          toExpanded: { duration: 500, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }
+        }
+      });
+      
+      // Make sure the container has the entity ID for future reference
+      this.container.setAttribute('data-entity-id', headerEntityId);
+    }
+  }
+  
+  /**
+   * Update animation component in ECS system
+   * @private
+   * @param {Object} properties - Animation properties to update
+   */
+  _updateAnimationComponent(properties) {
+    if (!this.ecs) return;
+    
+    const headerEntityId = this.container.getAttribute('data-entity-id');
+    if (headerEntityId && this.ecs.hasComponent(headerEntityId, 'animation')) {
+      const animComponent = this.ecs.getComponent(headerEntityId, 'animation');
+      Object.assign(animComponent.properties, properties);
+    }
+  }
+  
+  /**
+   * Start the timer to auto-collapse the header
+   * @private
+   */
+  _startCollapseTimer() {
+    // Clear any existing timer
+    this._clearCollapseTimer();
+    
+    // Only start timer if not collapsed
+    if (!this.isCollapsed) {
+      this.collapseTimer = setTimeout(() => {
+        this.collapseHeader();
+      }, this.options.autoCollapseDelay);
+      
+      // Update animation component if using ECS
+      this._updateAnimationComponent({
+        lastInteraction: Date.now()
+      });
+    }
+  }
+  
+  /**
+   * Clear the auto-collapse timer
+   * @private
+   */
+  _clearCollapseTimer() {
+    if (this.collapseTimer) {
+      clearTimeout(this.collapseTimer);
+      this.collapseTimer = null;
+    }
+  }
+  
+  /**
+   * Collapse the header into a bubble - starts slow and accelerates
+   */
+  collapseHeader() {
+    if (this.isCollapsed) return;
+    
+    this._clearCollapseTimer();
+    this.isCollapsed = true;
+    
+    // Remove any inline styles that might interfere with our CSS
+    this.container.style.width = '';
+    this.container.style.left = '';
+    this.container.style.right = '';
+    this.container.style.top = '';
+    this.container.style.position = '';
+    
+    // Add collapsing-state class for slow-start-fast-end transition
+    this.container.classList.add('collapsing-state');
+    
+    // Add the collapsed class
+    this.container.classList.add('collapsed');
+    this.container.classList.remove('expanding');
+    this.container.classList.remove('expanding-state');
+    
+    // Update animation component if using ECS
+    this._updateAnimationComponent({
+      collapsed: true,
+      expanding: false
+    });
+    
+    // Remove the transition class after animation completes
+    setTimeout(() => {
+      this.container.classList.remove('collapsing-state');
+    }, 600); // Match to collapse transition duration (0.6s)
+    
+    // Dispatch custom event
+    this.container.dispatchEvent(new CustomEvent('header:collapse', {
+      bubbles: true,
+      detail: { header: this }
+    }));
+  }
+  
+  /**
+   * Expand the header to full size - quick start with smooth deceleration
+   */
+  expandHeader() {
+    if (!this.isCollapsed) return;
+    
+    this._clearCollapseTimer();
+    this.isCollapsed = false;
+    
+    // Remove any inline styles that might interfere with our CSS
+    this.container.style.width = '';
+    this.container.style.left = '';
+    this.container.style.right = '';
+    this.container.style.top = '';
+    this.container.style.position = '';
+    
+    // Add expanding-state class for fast-start-slow-end transition
+    this.container.classList.add('expanding-state');
+    
+    // Update classes
+    this.container.classList.remove('collapsed');
+    this.container.classList.add('expanding');
+    this.container.classList.remove('collapsing-state');
+    
+    // After transition completes, remove the expanding class
+    setTimeout(() => {
+      this.container.classList.remove('expanding');
+      
+      // Update animation component if using ECS
+      this._updateAnimationComponent({
+        collapsed: false,
+        expanding: false
+      });
+      
+    }, 500); // Match to expand transition duration (0.5s)
+    
+    // After all transitions complete, remove the state class
+    setTimeout(() => {
+      this.container.classList.remove('expanding-state');
+    }, 550); // Slightly longer than the main transition
+    
+    // Initially mark as expanding for animation component
+    this._updateAnimationComponent({
+      collapsed: false,
+      expanding: true,
+      lastInteraction: Date.now()
+    });
+    
+    // Dispatch custom event
+    this.container.dispatchEvent(new CustomEvent('header:expand', {
+      bubbles: true,
+      detail: { header: this }
+    }));
+    
+    // Start collapse timer
+    this._startCollapseTimer();
   }
   
   /**
@@ -190,6 +431,11 @@ class Header {
       </div>
     `;
     
+    // Make sure we add the header class for styling
+    if (!this.container.classList.contains('header')) {
+      this.container.classList.add('header');
+    }
+    
     // Make title clickable to navigate to home
     const title = this.container.querySelector('h1');
     if (title) {
@@ -210,6 +456,11 @@ class Header {
   _createHeaderStructure() {
     // Reset the container
     this.container.innerHTML = '';
+    
+    // Make sure container has the header class for styling
+    if (!this.container.classList.contains('header')) {
+      this.container.classList.add('header');
+    }
     
     // Apply header position from config
     if (this.headerConfig.position) {

@@ -1,0 +1,93 @@
+/* Performance tab styles */
+.performance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.perf-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.perf-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.chart-container {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 10px;
+    background-color: var(--card-bg-color);
+}
+
+.chart-container h4 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.perf-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.metric-card {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--card-bg-color);
+    text-align: center;
+}
+
+.metric-title {
+    font-size: 12px;
+    color: var(--text-light-color);
+    margin-bottom: 5px;
+}
+
+.metric-value {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.perf-table-container {
+    margin-top: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+.perf-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.perf-table th,
+.perf-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.perf-table th {
+    background-color: var(--nav-bg-color);
+    font-weight: bold;
+}
+
+.perf-table tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .perf-charts {
+        grid-template-columns: 1fr;
+    }
+}

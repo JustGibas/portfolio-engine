@@ -24,7 +24,7 @@
 
   
   /* Code block variables */
-  --code-bg-color: #2d2d2d;
+  --code-bg-color: #f4f4f4;
   --code-text-color: #333333;
 
   /* Dropdown variables 
@@ -50,7 +50,7 @@
   --text-color: #f4f4f4;
   --text-light-color: #aaaaaa;
   --border-color: #555555;
-  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-color: rgba(0, 0, 0, );
 
   /**/
   --header-bg-color: #1a1a1a;

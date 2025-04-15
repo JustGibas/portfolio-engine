@@ -79,13 +79,17 @@
 
 .hero-illustration {
   animation: slideInRight 0.8s ease-out;
+  overflow: hidden;
+  max-width: 100%;
 }
 
+/* Responsive styles for code block to match engine-showcase */
 .code-block {
   background-color: var(--code-bg-color, #2d2d2d);
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 100%;
 }
 
 .code-block pre {
@@ -120,7 +124,7 @@
 }
 
 .feature-card {
-  background-color: var(--surface-color);
+  background-color: var(--card-bg-color);
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -279,6 +283,13 @@
   .hero-subtitle {
     font-size: 1.3rem;
   }
+  
+  /* Add proper display for code block on tablet and mobile */
+  .hero-illustration {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 768px) {
@@ -307,14 +318,30 @@
   .hero-cta {
     flex-direction: column;
     width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
   }
   
   .primary-button, .secondary-button {
     width: 100%;
     text-align: center;
+    box-sizing: border-box;
   }
   
   .features-grid {
     grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .showcase-cards {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .hero-illustration {
+    max-width: 400px;
+    margin: 0 auto;
   }
 }
